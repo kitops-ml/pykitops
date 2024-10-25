@@ -83,11 +83,6 @@ class ModelSection:
         if parameters is not None:
             self.parameters = parameters
 
-# class ModelSection:
-#     def __init__(self):
-#         self._model_section =  ModelSectionDict()
-#         self._model_entry = ModelEntry()
-
     @property
     def path(self) -> str:
         return self._model_entry["path"]
@@ -141,8 +136,8 @@ class ModelSection:
         return self._model_entry["parts"]
 
     @parts.setter
-    def parts(self, model_parts: ModelPartsSection | None) -> None:
-        self._model_entry["parts"] = model_parts
+    def parts(self, model_parts: ModelPartsSection ) -> None:
+        self._model_entry["parts"] = model_parts.entries
 
     @property
     def parameters(self) -> str:
@@ -150,7 +145,7 @@ class ModelSection:
 
     @parameters.setter
     def parameters(self, value: str) -> None:
-        self._model_entry["parameters"] = value
+        self._model_entry["parameters"] = yaml.safe_load(value)
     
     def build(self) -> ModelSectionDict:
         # filter out any of the Model contents that are None

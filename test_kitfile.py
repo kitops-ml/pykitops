@@ -109,5 +109,8 @@ kitfile.model_section.parts = model_parts_section
 kitfile.model_section.parameters = '''
 age: 52
 city: Florence
+items:
+- list item 1
+- list item 2
 '''
 print(kitfile.build())
