@@ -1,0 +1,16 @@
+[
+  {
+    name: config,
+    path: config.json,
+    type: config file
+  },
+  {
+    path: tokenizer.json
+  },
+  {
+    path: tokenizer_config.json
+  },
+  {
+    path: vocab.txt
+  }
+]
