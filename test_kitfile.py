@@ -1,11 +1,12 @@
 from modelkit.kitfile import Kitfile
 from modelkit.manifest_version import ManifestVersionSection
-from modelkit.package import PackageSection
+#from modelkit.package import PackageSection
+from modelkit.package_alt import PackageSection
 from modelkit.code import CodeEntry, CodeSection
 from modelkit.datasets import DatasetsEntry, DatasetsSection
 from modelkit.docs import DocsEntry, DocsSection
 from modelkit.model_parts import ModelPartsEntry, ModelPartsSection
-from modelkit.model import ModelEntry, ModelSection
+from modelkit.model import ModelSection
 
 kitfile = Kitfile()
 

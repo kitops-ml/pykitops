@@ -21,7 +21,7 @@ class ManifestVersionDict(dict):
 
 
 class ManifestVersionSection:
-    def __init__(self, version: str = '1.0'):
+    def __init__(self, version: str | None = '1.0'):
         self._manifest_version_section = ManifestVersionDict()
         self.version = version
 
@@ -36,3 +36,11 @@ class ManifestVersionSection:
 
     def build(self) -> ManifestVersionDict:
         return self._manifest_version_section
+    
+    @classmethod
+    def create_from_yaml(cls, data):
+        if data:
+            mv_section = ManifestVersionSection(version = data)
+        else:
+            mv_section = ManifestVersionSection()
+        return mv_section

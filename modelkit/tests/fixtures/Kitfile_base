@@ -1,0 +1,9 @@
+manifestVersion: '1.0'
+package:
+  name: Titanic-Survivability-Predictor
+  version: 1.0.0
+  description: >- 
+    A model attempting to predict passenger survivability of the 
+    Titanic Shipwreck
+  authors:
+  - Jozu

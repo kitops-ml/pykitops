@@ -1,0 +1,37 @@
+manifestVersion: null
+
+package:
+  name: null
+  version: null
+  description: null
+  license: null
+  authors:
+  - null
+
+code:
+- path: null
+  description: null
+  license: null
+
+datasets:
+- name: null
+  path: null
+  description: null
+  license: null
+
+docs:
+- path: null
+  description: null
+
+model:
+  path: null
+  name: null
+  description: null
+  framework: null
+  license: null
+  version: null
+  parts:
+  - path: null
+    name: null
+    type: null
+  parameters: null

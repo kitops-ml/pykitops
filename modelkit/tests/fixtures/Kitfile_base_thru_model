@@ -2,21 +2,19 @@ manifestVersion: '1.0'
 package:
   name: Titanic-Survivability-Predictor
   version: 1.0.0
-  description: A model attempting to predict passenger survivability of the Titanic
-    Shipwreck
+  description: >-
+     A model attempting to predict passenger survivability of 
+     the Titanic Shipwreck
   authors:
   - Jozu
-docs:
-- path: README.md
-  description: Important notes about the project.
-- path: images
-  description: Directory containing figures and graphs exported as image files.
 code:
 - path: requirements.txt
   description: Python packages required by this example.
   license: Apache-2.0
 - path: titanic_survivability.ipynb
-  description: Jupyter Notebook used to train, validate, optimize and export the model.
+  description: >-
+    Jupyter Notebook used to train, validate, optimize and 
+    export the model.
   license: Apache-2.0
 datasets:
 - name: training
@@ -27,10 +25,17 @@ datasets:
   path: data/test.csv
   description: Data to be used for model testing.
   license: Apache-2.0
+docs:
+- path: README.md
+  description: Important notes about the project.
+- path: images
+  description: >-
+    Directory containing figures and graphs exported as image files.
 model:
   name: titanic-survivability-predictor
   path: model
-  description: Directory containing figures and graphs exported as image files.
+  description: >- 
+    Directory containing figures and graphs exported as image files.
   framework: joblib
   license: Apache-2.0
   version: '1.0'
@@ -41,3 +46,10 @@ model:
     - path: tokenizer.json
     - path: tokenizer_config.json
     - path: vocab.txt
+  parameters:
+    param1: val1
+    param2: val2
+    items:
+    - list item 1
+    - list item 2
+    

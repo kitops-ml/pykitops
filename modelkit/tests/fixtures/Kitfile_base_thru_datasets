@@ -1,0 +1,27 @@
+manifestVersion: '1.0'
+package:
+  name: Titanic-Survivability-Predictor
+  version: 1.0.0
+  description: >-
+     A model attempting to predict passenger survivability of 
+     the Titanic Shipwreck
+  authors:
+  - Jozu
+code:
+- path: requirements.txt
+  description: Python packages required by this example.
+  license: Apache-2.0
+- path: titanic_survivability.ipynb
+  description: >-
+    Jupyter Notebook used to train, validate, optimize and 
+    export the model.
+  license: Apache-2.0
+datasets:
+- name: training
+  path: data/train.csv
+  description: Data to be used for model training.
+  license: Apache-2.0
+- name: testing
+  path: data/test.csv
+  description: Data to be used for model testing.
+  license: Apache-2.0

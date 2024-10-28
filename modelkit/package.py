@@ -50,7 +50,7 @@ class PackageSectionDict(dict):
         super().__setitem__(key, value)
 
 class PackageSection:
-    def __init__(self, name: str, version: str, 
+    def __init__(self, name: str | None, version: str | None, 
                  description: str | None = None, 
                  authors: list[str] | None = None):
         self._package_section =  PackageSectionDict()
@@ -63,19 +63,19 @@ class PackageSection:
             self.authors = authors
 
     @property
-    def name(self) -> str:
+    def name(self) -> str | None:
         return self._package_entry["name"]
 
     @name.setter
-    def name(self, value: str) -> None:
+    def name(self, value: str | None) -> None:
         self._package_entry["name"] = value
 
     @property
-    def version(self) -> str:
+    def version(self) -> str | None:
         return self._package_entry["version"]
     
     @version.setter
-    def version(self, value: str) -> None:
+    def version(self, value: str | None) -> None:
         self._package_entry["version"] = value
 
     @property
@@ -103,3 +103,14 @@ class PackageSection:
         # self._package_section["package"] = package
         self._package_section["package"] = self._package_entry
         return self._package_section
+    
+    @classmethod
+    def create_from_yaml(cls, data):
+        if data:
+            # iterate through the section's allowed keys
+            provided_keys = set(data.keys())
+            matchin_keys = provided_keys.intersection(
+                                PackageSection._all
+            )
+        else:
+            package_section =PackageSection()
