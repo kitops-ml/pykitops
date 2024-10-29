@@ -1,22 +1,23 @@
 import yaml
 from typing import Any, Dict, List, Set
 
-class Validator:
+class StringValidator:
     def __init__(self, allowed_keys):
         self.allowed_keys = allowed_keys
-    
-    def validate_string(self, data: Any):
+
+    @property
+    def allowed_keys(self):
+        return self._allowed_keys
+
+    @allowed_keys.setter
+    def allowed_keys(self, values):
+        self._allowed_keys = values
+
+    def validate(self, data: Any):
         if not isinstance(data, str):
             raise ValueError(f"Expected a string but got {type(data).__name__}")
         if not data.strip():
             raise ValueError(f"String value must be non-empty.")
-
-class StringValidator(Validator):
-    def __init__(self, allowed_keys):
-        super().__init__(allowed_keys)
-
-    def validate(self, data: Any):
-        super().validate_string(data)
 
 class DictValidator(StringValidator):
     def __init__(self, allowed_keys):
@@ -31,10 +32,14 @@ class DictValidator(StringValidator):
         if len(unallowed_keys) > 0:
             raise ValueError("Found unallowed key(s): " +
                              f"{', '.join(unallowed_keys)}")
-            
+
+        # the keys are allowed, so process the keys' values
+        self.validate_values(data, keys = data_keys) 
+
+    def validate_values(self, data, keys):
         # process the keys in this dict since they're allowed
-        for key in data_keys:
-            super().validate_string(data[key])
+        for key in keys:
+            super().validate(data[key])
 
 class DictListValidator(DictValidator):
     def __init__(self, allowed_keys):
@@ -48,13 +53,7 @@ class DictListValidator(DictValidator):
         for item in data:
             super().validate(item)
 
-class NestedDictsValidator(Validator):
-    def __init__(self, allowed_keys):
-        super().__init__(allowed_keys)
-
-    def validate(self, data: Any):
-        if not isinstance(data, dict):
-            raise ValueError(f"Expected a dictionary but got {type(data).__name__}")
+#  =======================================================================
 
 class ManifestVersionValidator(StringValidator):
     def __init__(self, allowed_keys):
@@ -63,31 +62,25 @@ class ManifestVersionValidator(StringValidator):
     def validate(self, data: Any):
             super().validate(data)
 
-class PackageValidator(NestedDictsValidator):
+class PackageValidator(DictValidator):
     def __init__(self, allowed_keys):
         super().__init__(allowed_keys)
 
     def validate(self, data: Any):
         super().validate(data)
-
-        # raise an error if data contains any keys other than
-        # those which are allowed
-        data_keys = set(data.keys())
-        unallowed_keys = data_keys.difference(self.allowed_keys)   
-        if len(unallowed_keys) > 0:
-            raise ValueError("Found unallowed key(s) in 'package': " +
-                             f"{', '.join(unallowed_keys)}")
         
+    # Overrides DictValidator.validate_values
+    def validate_values(self, data, keys):
         # the keys in data are allowed, so process their values
-        for key in data_keys:
+        for key in keys:
             if key == 'authors':
                 if not isinstance(data[key], list):
                     raise ValueError("Expected a list for 'package[authors]'")
                 # authors is a list
                 for author in data[key]:
-                    super().validate_string(author)
+                    StringValidator.validate(self, data=author)
             else:
-                super().validate_string(data[key])
+                StringValidator.validate(self, data=data[key])
 
 class CodeValidator(DictListValidator):
     def __init__(self, allowed_keys):
@@ -117,7 +110,7 @@ class ModelPartsValidator(DictListValidator):
     def validate(self, data: Any):
         super().validate(data)
     
-class ModelValidator(NestedDictsValidator):
+class ModelValidator(DictValidator):
     def __init__(self, allowed_keys):
         super().__init__(allowed_keys)
 
@@ -137,9 +130,10 @@ class ModelValidator(NestedDictsValidator):
         if len(unallowed_keys) > 0:
             raise ValueError("Found unallowed key(s) in 'model': " +
                              f"{', '.join(unallowed_keys)}")
-        
+    
+    def validate_values(self, data, keys):
         # the keys in data are allowed, so process their values
-        for key in data_keys:
+        for key in keys:
             if key == 'parts':
                 self.parts_validator_map[key].validate(data[key])
             elif key == 'parameters':
@@ -152,10 +146,10 @@ class ModelValidator(NestedDictsValidator):
             else:
                 # all other values just need to be confirmed as
                 # being valid strings
-                super().validate_string(data[key])
+                StringValidator.validate(self, data=data[key])
 
 # Kitfile validator
-class KitfileValidator(NestedDictsValidator):
+class KitfileValidator(DictValidator):
     def __init__(self, allowed_keys = None):
         self.validator_map = {
             'manifestVersion': 
@@ -188,20 +182,9 @@ class KitfileValidator(NestedDictsValidator):
         # raise an error if data isn't a dictionary type
         super().validate(data)
 
-        # raise an error if data contains keys other
-        # than those allowed
-        data_keys = set(data.keys())
-        unallowed_keys = data_keys.difference(self.allowed_keys)
-        if len(unallowed_keys) > 0:
-            raise ValueError("Found unallowed key(s): " +
-                             f"{', '.join(unallowed_keys)}")
-        
-        # the keys present in the dictionary are allowed so 
-        # validate their corresponding values individually
-        for key in data_keys:
+    def validate_values(self, data, keys):
+        for key in keys:
             self.validator_map[key].validate(data[key])
-            # eval(self._validator_map[key].validate(data[key]))
-
 
 # Usage
 

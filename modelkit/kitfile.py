@@ -12,31 +12,30 @@ from .model import ModelSection, ModelEntry
 from .restricted_dict import RestrictedDict
 from .utils import is_empty_list, custom_dict_representer
 
-class Kitfile(RestrictedDict):
-    _allowed_section_names = {'manifestVersion',
-                              'package',
-                              'code',
-                              'datasets',
-                              'docs',
-                              'model'}
+class Kitfile:
+    def __init__(self, stream):
+
+        if stream:
+            self.load_from_stream(stream)
+        else:
+            self.initialize_empty_kitfile()
+
+    def load_from_stream(self, stream):
+        data = yaml.safe_load(stream)
+        self.validate_and_set_attributes(data)
+
+    def initialize_empty_kitfile(self):
+        self.manifest_version_section = None
+        self.package_section = None
+        self.code_section = None
+        self.datasets_section = None
+        self.docs_section = None
+        self.model_section = None
+
+    def validate_and_set_attributes(data):
+        # TO DO
+
     
-    def __init__(self, data:Dict|None=None):
-        super().__init__(name="Kitfile", data=data,
-                         string_valued_keys={"manifestVersion"},
-                         list_valued_keys={"code","datasets","docs"},
-                         dict_valued_keys={"package","model"})
-        
-
-        # self._manifest_version_section: ManifestVersionSection | None = None
-        # self._package_section: PackageSection | None = None
-        # self._code_section: CodeSection | None = None
-        # self._datasets_section: DatasetsSection | None = None
-        # self._docs_section: DocsSection | None = None
-        # self._model_section: ModelSection | None = None
-        # try to load the contents of the kitfile from the 
-        # data object;
-        # return None if the stream isn't provided
-
     @property
     def manifest_version_section(self) -> ManifestVersionSection:
         return self._manifest_version_section

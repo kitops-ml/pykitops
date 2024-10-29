@@ -1,4 +1,6 @@
+from typing import Any
 from .utils import is_empty_string
+#from .base_validators import StringValidator
 
 """
 Defines a dictionary that can only have a single key named
@@ -18,6 +20,7 @@ class ManifestVersionDict(dict):
         # The key is allowed and its corresponding value is a valid string
         # so add it to the dictionary.
         super().__setitem__(key, value)
+
 
 
 class ManifestVersionSection:
