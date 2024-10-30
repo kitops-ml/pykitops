@@ -1,12 +1,17 @@
 import yaml
 from pathlib import Path
 from typing import Any, Dict, List, Set
+from .package_section_validator import PackageValidator
 
 class Kitfile:
     def __init__(self, path = None):
         self._data = {}
         self._kitfile_allowed_keys = {'manifestVersion', 'package', 
                                      'code', 'datasets', 'docs', 'model'}
+        
+        # initialize the kitfile section validators
+        self.initialize_kitfile_section_validators()
+
         # initialize an empty kitfile object
         self.manifestVersion = ""
         self.package = {"name": "", "version": "", "description": "", 
@@ -20,6 +25,12 @@ class Kitfile:
 
         if path:
             self.load_from_file(path)
+
+    def initialize_kitfile_section_validators(self):
+        self._package_validator = PackageValidator(
+                                    section='package',
+                                    allowed_keys={"name", "version", 
+                                                  "description", "authors"})
 
     def load_from_file(self, path):
         kitfile_path = Path(path)
@@ -82,14 +93,7 @@ class Kitfile:
 
     @package.setter
     def package(self, value: Dict[str, Any]):
-        allowed_keys = {'name', 'version', 'description', 'authors'}
-        try:
-            self.validate_dict(value, allowed_keys)
-        except ValueError as e:
-            raise ValueError(
-                    "package must be a dictionary with allowed " +
-                    f"keys: {', '.join(allowed_keys)}"
-                    ) from e
+        self._package_validator.validate(data=value)
         self._data["package"] = value
 
     @property
