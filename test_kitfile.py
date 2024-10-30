@@ -1,4 +1,4 @@
-from modelkit.kitfile import Kitfile
+from modelkit.kitfile_bak import Kitfile
 from modelkit.manifest_version import ManifestVersionSection
 #from modelkit.package import PackageSection
 from modelkit.package_alt import PackageSection

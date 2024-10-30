@@ -1,7 +1,7 @@
 import py
 import yaml
 from typing import Dict
-from modelkit.kitfile import Kitfile
+from modelkit.kitfile_bak import Kitfile
 
 class TestKitfileCreation:
     def test_create_full_kitfile(self, fixtures, tmpdir = None):
