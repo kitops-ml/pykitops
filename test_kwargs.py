@@ -59,7 +59,7 @@ class Kitfile:
     def validate_dict(self, value: Any, allowed_keys: Set[str]):
         if not isinstance(value, dict):
             raise ValueError(
-                    f"Expected a dictionary but got {type(value).__name__}")
+                    f"Expected a dictionary but got {type(data).__name__}")
         value_keys = set(value.keys())
         unallowed_keys = value_keys.difference(allowed_keys) 
         if len(unallowed_keys) > 0:
@@ -137,3 +137,56 @@ class Kitfile:
     def to_yaml(self) -> str:
         return yaml.dump(data = self._data, sort_keys=False,
                          default_flow_style=False)
+
+    # Deserialize from YAML
+    # @classmethod
+    # def from_yaml(cls, yaml_str: str):
+    #     data = yaml.safe_load(yaml_str)
+    #     return cls(**data)
+
+# Usage
+path = 'modelkit/tests/fixtures/Kitfile_full'
+kitfile = Kitfile(path=path)
+
+print("kitfile.manifestVersion: " + kitfile.manifestVersion)
+print("kitfile.package: ")
+print(kitfile.package)
+print("=======================================================")
+
+# Serialize to YAML
+yaml_data = kitfile.to_yaml()
+print(yaml_data)
+print("=======================================================")
+
+
+kitfile.manifestVersion = "2.0"
+kitfile.package = {
+    "name": "New-Package",
+    "version": "2.0.0",
+    "description": "New description",
+    "authors": ["Author"]
+}
+
+print("kitfile.manifestVersion: " + kitfile.manifestVersion)
+print("kitfile.package: ")
+print(kitfile.package)
+print("=======================================================")
+# Serialize to YAML
+yaml_data = kitfile.to_yaml()
+print(yaml_data)
+print("=======================================================")
+
+# Create an empty Kitfile and update attributes
+kitfile = Kitfile()
+kitfile.manifestVersion = "3.0"
+kitfile.package = {
+    "name": "Another-Package",
+    "version": "3.0.0",
+    "description": "Another description",
+    "authors": ["Someone"]
+}
+# Deserialize from YAML
+# new_kitfile = Kitfile.from_yaml(yaml_data)
+# print("new_kitfile.manifestVersion: " + new_kitfile.manifestVersion)
+# print("new_kitfile.package: ")
+# print(new_kitfile.package)

@@ -13,17 +13,20 @@ class StringValidator:
     def allowed_keys(self, values):
         self._allowed_keys = values
 
-    def validate(self, data: Any):
+    def validate(self, data: Any) -> str:
         if not isinstance(data, str):
             raise ValueError(f"Expected a string but got {type(data).__name__}")
-        if not data.strip():
+        data = data.strip()
+        if not data:
             raise ValueError(f"String value must be non-empty.")
-
+        # the string passed validation so return it
+        return data
+    
 class DictValidator(StringValidator):
     def __init__(self, allowed_keys):
         super().__init__(allowed_keys)
 
-    def validate(self, data: Any):
+    def validate(self, data: Any) -> Any:
         if not isinstance(data, dict):
             raise ValueError(
                     f"Expected a dictionary but got {type(data).__name__}")
@@ -55,12 +58,7 @@ class DictListValidator(DictValidator):
 
 #  =======================================================================
 
-class ManifestVersionValidator(StringValidator):
-    def __init__(self, allowed_keys):
-        super().__init__(allowed_keys)
 
-    def validate(self, data: Any):
-            super().validate(data)
 
 class PackageValidator(DictValidator):
     def __init__(self, allowed_keys):
@@ -148,43 +146,6 @@ class ModelValidator(DictValidator):
                 # being valid strings
                 StringValidator.validate(self, data=data[key])
 
-# Kitfile validator
-class KitfileValidator(DictValidator):
-    def __init__(self, allowed_keys = None):
-        self.validator_map = {
-            'manifestVersion': 
-                ManifestVersionValidator(
-                    allowed_keys=set()),
-            'package': 
-                PackageValidator(
-                    allowed_keys={'name', 'version', 'description', 
-                                  'authors'}),
-            'code': 
-                CodeValidator(
-                    allowed_keys={'path', 'description', 'license'}),
-            'datasets': 
-                DatasetsValidator(
-                    allowed_keys={'name', 'path', 'description', 
-                                  'license'}),
-            'docs': 
-                DocsValidator(
-                    allowed_keys={'path', 'description'}),
-            'model': 
-                ModelValidator(
-                        allowed_keys={'name', 'path', 'description', 
-                                      'framework', 'license', 'version', 
-                                      'parts', 'parameters'})
-        }
-        allowed_keys = set(self.validator_map.keys())
-        super().__init__(allowed_keys)
-
-    def validate(self, data: Any):
-        # raise an error if data isn't a dictionary type
-        super().validate(data)
-
-    def validate_values(self, data, keys):
-        for key in keys:
-            self.validator_map[key].validate(data[key])
 
 # Usage
 

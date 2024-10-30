@@ -1,60 +1,39 @@
-from .utils import is_valid_string, is_valid_list, is_empty_list
+from typing import Any, Dict, List, Set
+from .utils import is_empty_string
+from .base_validators import DictValidator
+from .kitfile_section import KitfileSection
 
-class PackageEntry(dict):
-    _required_keys = {'name', 'version'}
-    _optional_keys = {'description', 'authors'}
-    _allowed_keys = _required_keys.union(_optional_keys)
-    _keys_with_string_values = {'name', 'version', 'description'}
-    _keys_with_list_values = {'authors'}
+class PackageSection(KitfileSection):
+    def __init__(self, data: Dict[str, str|List[str]], name: str | None = None, 
+                 version: str | None = None, description: str | None = None, 
+                 authors: List[str] | None = None):
+        section_name = 'package'
+        self._data: Dict = {
+            section_name: {
+                'name': "", 
+                'version': "", 
+                'description': "", 
+                'authors': List[str]
+            }
+        }
+        allowed_keys = self._data[section_name].keys()
+        super().__init__(section_name=section_name, allowed_keys=allowed_keys)
+        self._validator = DictValidator(allowed_keys)
 
-    def __setitem__(self, key, value):
-        # Make sure the given key is allowed.
-        if key not in self._allowed_keys:
-            raise KeyError(
-                f"Key '{key}' is not allowed. " +
-                f"Allowed keys are: {', '.join(self._allowed_keys)}")
-        
-        # The key is allowed.
-        # Check if the key is required
-        if key in self._required_keys:
-            if key in self._keys_with_string_values:
-                if not is_valid_string(value):
-                    raise ValueError(
-                        f"Key '{key}' must have a non-empty, " +
-                        "non-whitespace string value")
-            if key in self._keys_with_list_values:
-                if not is_valid_list(value):
-                    raise ValueError(
-                        f"Key '{key}' must be a non-empty list")
+        # if data is provided, then construct the PackageSection
+        # from it; otherwise, create the data dictionary using 
+        # the other supplied parameters
+        if not data:
+            data = dict()
+            if name:
+                data.update({'name', name})
+            if version:
+                data.update({'version', version})
+            if description:
+                data.update({'description', description})
+            if authors:
+                data.update({'authors', authors})
 
-        # Otherwise, the key is optional, so we don't have to be 
-        # vigilant about its value       
-        super().__setitem__(key, value)
-
-class PackageSectionDict(dict):
-    _allowed_keys = ['package']
-
-    def __setitem__(self, key, value):
-        # Make sure the given key is allowed.
-        if key not in self._allowed_keys:
-            raise KeyError(
-                f"Key '{key}' is not allowed. " +
-                "Allowed keys are: {', '.join(self.allowed_keys)}")
-        # The key is allowed. Make sure its corresponding value is 
-        # a dictionary.
-        if not isinstance(value, dict):
-            raise ValueError(
-                f"Key '{key}' must have a dictionary value")
-        # The key is allowed and its corresponding value is a 
-        # valid dictionary
-        super().__setitem__(key, value)
-
-class PackageSection:
-    def __init__(self, name: str | None, version: str | None, 
-                 description: str | None = None, 
-                 authors: list[str] | None = None):
-        self._package_section =  PackageSectionDict()
-        self._package_entry = PackageEntry()
         self.name = name
         self.version = version
         if description is not None:
