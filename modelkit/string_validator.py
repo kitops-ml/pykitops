@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Set
 
-class StringSectionValidator:
+class StringValidator:
     def __init__(self, section: str, allowed_keys:Set[str]):
         self.section = section
         self.allowed_keys = allowed_keys
