@@ -1,7 +1,7 @@
 from typing import Any, Set
-from .dict_section_validator import DictSectionValidator
+from .dict_validator import DictValidator
 
-class DictListValidator(DictSectionValidator):
+class DictListValidator(DictValidator):
     def __init__(self, section: str,  allowed_keys: Set[str]):
         super().__init__(section, allowed_keys)
 

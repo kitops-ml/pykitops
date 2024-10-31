@@ -1,7 +1,10 @@
 import yaml
 from pathlib import Path
 from typing import Any, Dict, List, Set
-from .package_section_validator import PackageValidator
+
+from .model_validator import ModelValidator
+from .package_validator import PackageValidator
+
 
 class Kitfile:
     def __init__(self, path = None):
@@ -31,6 +34,12 @@ class Kitfile:
                                     section='package',
                                     allowed_keys={"name", "version", 
                                                   "description", "authors"})
+        self._model_validator = ModelValidator(
+                                    section='model',
+                                    allowed_keys={"name", "path", "framework",
+                                                  "version", "description", 
+                                                  "license", "parts", 
+                                                  "parameters"})
 
     def load_from_file(self, path):
         kitfile_path = Path(path)
@@ -132,9 +141,7 @@ class Kitfile:
 
     @model.setter
     def model(self, value: Dict[str, Any]):
-        required_keys = {'name', 'path', 'description', 'framework', 'license', 'version', 'parts', 'parameters'}
-        if not isinstance(value, dict) or not all(key in value for key in required_keys):
-            raise ValueError(f"model must be a dictionary with keys: {required_keys}")
+        self._model_validator.validate(data=value)
         self._data["model"] = value
 
     # Serialize to YAML
