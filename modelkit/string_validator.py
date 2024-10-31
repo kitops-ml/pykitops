@@ -23,7 +23,9 @@ class StringValidator:
 
     def validate(self, data: Any):
         if not isinstance(data, str):
-            raise TypeError(f"Expected a string but got {type(data).__name__}")
+            raise TypeError(
+                f"Problem processing '{self.section}'. " +
+                f"Expected a string but got {type(data).__name__}")
         # data = data.strip()
         # if not data:
         #     raise ValueError(f"String value must be non-empty.")

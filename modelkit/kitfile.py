@@ -3,6 +3,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Set
 
 from .model_validator import ModelValidator
+from .code_validator import CodeValidator
+from .datasets_validator import DatasetsValidator
+from .docs_validator import DocsValidator
+from .manifest_version_validator import ManifestVersionValidator
 from .package_validator import PackageValidator
 
 
@@ -30,10 +34,24 @@ class Kitfile:
             self.load_from_file(path)
 
     def initialize_kitfile_section_validators(self):
+        self._manifestVersion_validator = ManifestVersionValidator(
+                                            section='manifestVersion',
+                                            allowed_keys=set())
         self._package_validator = PackageValidator(
                                     section='package',
                                     allowed_keys={"name", "version", 
                                                   "description", "authors"})
+        self._code_validator = CodeValidator(
+                                    section='code',
+                                    allowed_keys={"path", "description", 
+                                                  "license"})
+        self._datasets_validator = DatasetsValidator(
+                                    section='datasets',
+                                    allowed_keys={"name", "path", 
+                                                  "description", "license"})
+        self._docs_validator = DocsValidator(
+                                    section='docs',
+                                    allowed_keys={"path", "description"})
         self._model_validator = ModelValidator(
                                     section='model',
                                     allowed_keys={"name", "path", "framework",
@@ -92,8 +110,7 @@ class Kitfile:
 
     @manifestVersion.setter
     def manifestVersion(self, value: str):
-        if not isinstance(value, str):
-            raise ValueError("manifestVersion must be a string")
+        self._manifestVersion_validator.validate(data=value)
         self._data["manifestVersion"] = value
 
     @property
@@ -111,8 +128,7 @@ class Kitfile:
 
     @code.setter
     def code(self, value: List[Dict[str, Any]]):
-        if not isinstance(value, list) or any(not isinstance(item, dict) for item in value):
-            raise ValueError("code must be a list of dictionaries")
+        self._code_validator.validate(data=value)
         self._data["code"] = value
 
     @property
@@ -121,8 +137,7 @@ class Kitfile:
 
     @datasets.setter
     def datasets(self, value: List[Dict[str, Any]]):
-        if not isinstance(value, list) or any(not isinstance(item, dict) for item in value):
-            raise ValueError("datasets must be a list of dictionaries")
+        self._datasets_validator.validate(data=value)
         self._data["datasets"] = value
 
     @property
@@ -131,8 +146,7 @@ class Kitfile:
 
     @docs.setter
     def docs(self, value: List[Dict[str, Any]]):
-        if not isinstance(value, list) or any(not isinstance(item, dict) for item in value):
-            raise ValueError("docs must be a list of dictionaries")
+        self._docs_validator.validate(data=value)
         self._data["docs"] = value
 
     @property
