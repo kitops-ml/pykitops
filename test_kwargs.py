@@ -46,3 +46,7 @@ kitfile.package = {
 # print("new_kitfile.manifestVersion: " + new_kitfile.manifestVersion)
 # print("new_kitfile.package: ")
 # print(new_kitfile.package)
+
+
+# def custom_dict_representer(dumper, data):
+#     return dumper.represent_dict(data.items())

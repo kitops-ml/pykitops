@@ -7,7 +7,9 @@ class DictListValidator(DictValidator):
 
     def validate(self, data: Any):
         if not isinstance(data, list):
-            raise ValueError(f"Expected a list but got {type(data).__name__}")
+            raise TypeError(
+                f"Problem processing '{self.section}'." +
+                f"Expected a list but got {type(data).__name__}")
 
         # process the list of items
         for item in data:
