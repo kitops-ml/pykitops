@@ -10,7 +10,7 @@ from typing import Any
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
     readme = f.read()
 
-with io.open('modelkit/__init__.py', 'rt', encoding='utf8') as f:
+with io.open('kitops/__init__.py', 'rt', encoding='utf8') as f:
     version: re.Match[str] | None = re.search(
         r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
         f.read(),
@@ -28,7 +28,7 @@ for k in requirements:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='modelkit',
+    name='kitops',
     version=version_str,
     description='A python library to manage KitOps ModelKits and Kitfiles',
     long_description=readme,
@@ -38,7 +38,7 @@ setup(
     url='https://github.com/jozu-ai/pymodelkit',
     license='Apache-2.0 License',
     python_requires='>=3.8.0',
-    packages=['modelkit'],
+    packages=['kitops'],
     keywords=['kitfile', 'modelkit', 'kitops', 'yaml', 'parser', 'serializer'],
     install_requires=requirements.pop('base'),
     extras_require=requirements,

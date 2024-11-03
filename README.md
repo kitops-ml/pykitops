@@ -1,2 +1,2 @@
-# pymodelkit
-Python package for ModelKit management
+# kitops
+Python package for KitOps' ModelKit management

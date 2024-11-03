@@ -1,7 +1,7 @@
-from modelkit.kitfile import Kitfile
+from kitops.kitfile import Kitfile
 
 # Usage
-path = 'modelkit/tests/fixtures/Kitfile_full'
+path = 'kitops/tests/fixtures/Kitfile_full'
 kitfile = Kitfile(path=path)
 
 print("kitfile.manifestVersion: " + kitfile.manifestVersion)
