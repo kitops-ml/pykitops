@@ -1,7 +1,7 @@
 from _pytest.compat import LEGACY_PATH
 import py
 import pytest
-from kitops.kitfile import Kitfile
+from src.kitops.modelkit.kitfile.kitfile import Kitfile
 
 class TestKitfileCreation:
 

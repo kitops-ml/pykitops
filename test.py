@@ -1,7 +1,11 @@
-from kitops.kitfile import Kitfile
-
 # Usage
-path = 'kitops/tests/fixtures/Kitfile_full'
+from src.kitops.modelkit.kitfile import Kitfile
+import os
+
+current_directory = os.getcwd()
+print(current_directory)
+
+path = '/Users/brett/Projects/pymodelkit/tests/fixtures/Kitfile_full'
 kitfile = Kitfile(path=path)
 
 print("kitfile.manifestVersion: " + kitfile.manifestVersion)
