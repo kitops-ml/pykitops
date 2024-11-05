@@ -38,6 +38,13 @@ print("=======================================================")
 
 # Create an empty Kitfile and update attributes
 kitfile = Kitfile()
+
+print("=======================================================")
+# Serialize to YAML
+yaml_data = kitfile.to_yaml()
+print(yaml_data)
+print("=======================================================")
+
 kitfile.manifestVersion = "3.0"
 kitfile.package = {
     "name": "Another-Package",
@@ -45,12 +52,9 @@ kitfile.package = {
     "description": "Another description",
     "authors": ["Someone"]
 }
-# Deserialize from YAML
-# new_kitfile = Kitfile.from_yaml(yaml_data)
-# print("new_kitfile.manifestVersion: " + new_kitfile.manifestVersion)
-# print("new_kitfile.package: ")
-# print(new_kitfile.package)
 
-
-# def custom_dict_representer(dumper, data):
-#     return dumper.represent_dict(data.items())
+print("=======================================================")
+# Serialize to YAML
+yaml_data = kitfile.to_yaml()
+print(yaml_data)
+print("=======================================================")

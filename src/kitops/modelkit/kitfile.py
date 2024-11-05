@@ -1,7 +1,30 @@
+'''
+Copyright 2024 The KitOps Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+'''
+
+"""
+Define the Kitfile class to manage KitOps ModelKits and Kitfiles.
+"""
+import copy
 import yaml
 from pathlib import Path
 from typing import Any, Dict, List, Set
 
+from .util import clean_empty_items, validate_dict
 from .validators.code_validator import CodeValidator
 from .validators.datasets_validator import DatasetsValidator
 from .validators.docs_validator import DocsValidator
@@ -20,10 +43,38 @@ class Kitfile:
 
     def __init__(self, path=None):
         """
-        Initialize the Kitfile.
+        Initialize the Kitfile from a path to an existing Kitfile, or 
+        create an empty Kitfile.
+
+        Examples:
+            >>> kitfile = Kitfile(path="path/to/Kitfile")
+            >>> kitfile.to_yaml()
+
+            >>> kitfile = Kitfile()
+            >>> kitfile.manifestVersion = "1.0"
+            >>> kitfile.package = {"name": "my_package", "version": "0.1.0",
+            ...                    "description": "My package description",
+            ...                    "authors": ["Author 1", "Author 2"]}
+            >>> kitfile.code = [{"path": "code/", "description": "Code description",
+            ...                  "license": "Apache-2.0"}]
+            >>> kitfile.datasets = [{"name": "my_dataset", "path": "datasets/",
+            ...                      "description": "Dataset description",
+            ...                      "license": "Apache-2.0"}]
+            >>> kitfile.docs = [{"path": "docs/", "description": "Docs description"}]
+            >>> kitfile.model = {"name": "my_model", "path": "model/",
+            ...                  "framework": "tensorflow", "version": "2.0.0",
+            ...                  "description": "Model description",
+            ...                  "license": "Apache-2.0", "parts": [],
+            ...                  "parameters": ""}
+            >>> kitfile.to_yaml()
+            'manifestVersion: 1.0\npackage:\n  name: my_package\n  version: 0.1.0\n  description: My package description\n  authors:\n  - Author 1\n  - Author 2\ncode:\n- path: code/\n  description: Code description\n  license: Apache-2.0\ndatasets:\n- name: my_dataset\n  path: datasets/\n  description: Dataset description\n  license: Apache-2.0\ndocs:\n- path: docs/\n  description: Docs description\nmodel:\n  name: my_model\n  path: model/\n  framework: tensorflow\n  version: 2.0.0\n  description: Model description\n  license: Apache-2.0\n  parts: []\n  parameters: ''\n'
+
 
         Args:
-            path (str, optional): Path to the Kitfile. Defaults to None.
+            path (str, optional): Path to existing Kitfile to load. Defaults to None.
+
+        Returns:
+            Kitfile: Kitfile object.
         """
         self._data = {}
         self._kitfile_allowed_keys = {'manifestVersion', 'package', 
@@ -77,7 +128,7 @@ class Kitfile:
 
     def load_from_file(self, path):
         """
-        Load Kitfile data from a file.
+        Load Kitfile data from a yaml-formatted file.
 
         Args:
             path (str): Path to the Kitfile.
@@ -102,8 +153,8 @@ class Kitfile:
                 raise
 
         try:
-            self.validate_dict(value=data, 
-                               allowed_keys=self._kitfile_allowed_keys)
+            validate_dict(value=data, 
+                          allowed_keys=self._kitfile_allowed_keys)
         except ValueError as e:
             raise ValueError(
                     "Kitfile must be a dictionary with allowed " +
@@ -121,23 +172,6 @@ class Kitfile:
         """
         for key, value in data.items():
             self.__setattr__(key, value)
-
-    def validate_dict(self, value: Any, allowed_keys: Set[str]):
-        """
-        Validate a dictionary against allowed keys.
-
-        Args:
-            value (Any): Value to validate.
-            allowed_keys (Set[str]): Set of allowed keys.
-        """
-        if not isinstance(value, dict):
-            raise ValueError(
-                    f"Expected a dictionary but got {type(value).__name__}")
-        value_keys = set(value.keys())
-        unallowed_keys = value_keys.difference(allowed_keys) 
-        if len(unallowed_keys) > 0:
-            raise ValueError("Found unallowed key(s): " +
-                             f"{', '.join(unallowed_keys)}")
 
     @property
     def manifestVersion(self) -> str:
@@ -264,13 +298,21 @@ class Kitfile:
         """
         self._model_validator.validate(data=value)
         self._data["model"] = value
-
-    def to_yaml(self) -> str:
+        
+    def to_yaml(self, suppress_empty_values: bool = True) -> str:
         """
-        Serialize the Kitfile to YAML format.
+        Serialize the Kitfile to YAML format. 
 
+        Args:
+            suppress_empty_values (bool, optional): Whether to suppress 
+                empty values. Defaults to True.
         Returns:
             str: YAML representation of the Kitfile.
         """
-        return yaml.dump(data = self._data, sort_keys=False,
+        dict_to_print = self._data
+        if suppress_empty_values:
+            dict_to_print = copy.deepcopy(self._data)
+            dict_to_print = clean_empty_items(dict_to_print)
+
+        return yaml.dump(data = dict_to_print, sort_keys=False,
                          default_flow_style=False)
