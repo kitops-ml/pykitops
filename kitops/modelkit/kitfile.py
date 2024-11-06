@@ -24,7 +24,7 @@ import yaml
 from pathlib import Path
 from typing import Any, Dict, List, Set
 
-from .util import clean_empty_items, validate_dict
+from .utils import clean_empty_items, validate_dict
 from .validators.code_validator import CodeValidator
 from .validators.datasets_validator import DatasetsValidator
 from .validators.docs_validator import DocsValidator
@@ -41,7 +41,7 @@ class Kitfile:
         path (str): Path to the Kitfile.
     """
 
-    def __init__(self, path=None):
+    def __init__(self, path: str | None = None):
         """
         Initialize the Kitfile from a path to an existing Kitfile, or 
         create an empty Kitfile.
@@ -76,7 +76,7 @@ class Kitfile:
         Returns:
             Kitfile: Kitfile object.
         """
-        self._data = {}
+        self._data: Dict = {}
         self._kitfile_allowed_keys = {'manifestVersion', 'package', 
                                      'code', 'datasets', 'docs', 'model'}
         

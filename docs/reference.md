@@ -3,4 +3,4 @@ an **information-oriented** approach. Use it as a
 reference for the technical implementation of the
 `kitops` project code.
 
-::: src.kitops.modelkit.kitfile.Kitfile
+::: kitops.modelkit.kitfile.Kitfile

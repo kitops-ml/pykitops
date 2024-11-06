@@ -10,7 +10,7 @@ authors = [
 ]
 description = "A package for working with KitOps' ModelKits"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",

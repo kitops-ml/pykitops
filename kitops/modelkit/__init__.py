@@ -17,4 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 '''
 
 from .kitfile import Kitfile
+from .reference import ModelKitReference
+from .user import UserCredentials
 

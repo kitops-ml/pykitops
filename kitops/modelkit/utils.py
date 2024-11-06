@@ -15,7 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 '''
-
+import os
+from dotenv import load_dotenv
 from typing import Any, Dict, Set
 
 def validate_dict(value: Dict[str, Any], allowed_keys: Set[str]):
@@ -91,3 +92,51 @@ def clean_empty_items(d: Any) -> Any:
         return cleaned_list
 
     return d
+
+def parse_modelkit_tag(tag: str) -> Dict[str, str]:
+    """
+    Parse a ModelKit tag into its components.
+
+    Examples:
+        >>> parse_modelkit_tag("jozu.ml/jozu-demos/titanic-survivability:latest")
+        {
+            "registry": "jozu.ml",
+            "namespace": "jozu-demos",
+            "model": "titanic-survivability",
+            "tag": "latest"
+        }
+
+    Args:
+        tag (str): Tag to parse.
+
+    Returns:
+        Dict[str, str]: Parsed components of the tag.
+    """
+    parts = tag.split("/")
+    if len(parts) != 3 or ":" not in parts[2]:
+        raise ValueError(f"Invalid tag format: {tag}")
+    return {
+        "registry": parts[0],
+        "namespace": parts[1],
+        "model": parts[2].split(":")[0],
+        "tag": parts[2].split(":")[1]
+    }
+
+def load_environment_variables() -> Dict[str, str | None]:
+    load_dotenv(override=True)
+    username = os.getenv("JOZU_USERNAME")
+    password = os.getenv("JOZU_PASSWORD")
+    if not username or not password:
+        raise ValueError("Missing JOZU_USERNAME or JOZU_PASSWORD in " +
+                         "environment variables. Both are required. " +
+                         "Please set these variables in your .env " +
+                         "file and try again.")
+    return {
+        "username": username,
+        "password": password,
+        "registry": os.getenv("JOZU_REGISTRY"),
+        "namespace": os.getenv("JOZU_NAMESPACE")
+    }
+
+
+
