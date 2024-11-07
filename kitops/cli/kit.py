@@ -2,49 +2,171 @@ import subprocess
 from typing import Any, List, Optional
 
 
-def kit_info(repo_path_with_tag, remote: Optional[bool] = True):
+def kit_info(repo_path_with_tag: str, remote: Optional[bool] = True):
+    """
+    Retrieve information about a kit repository.
+
+    Args:
+        repo_path_with_tag (str): The path to the repository along with the tag.
+        remote (Optional[bool]): If True, include the remote flag in the command. Defaults to True.
+
+    Returns:
+        None
+    """
     remote_flag = "--remote" if remote else ""
-    command = ["kit", "info", remote_flag,repo_path_with_tag]
+    command = ["kit", "info", remote_flag, repo_path_with_tag]
     _run(command=command)
 
-def kit_inspect(repo_path_with_tag, remote: Optional[bool] = True):
+def kit_inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
+    """
+    Inspect a repository using the 'kit' command.
+
+    Parameters:
+    repo_path_with_tag (str): The path to the repository along with the tag.
+    remote (Optional[bool]): Flag to indicate if the inspection should be done remotely. Defaults to True.
+        Otherwise, the inspection will be done locally.
+
+    Returns:
+        None
+    """
     remote_flag = "--remote" if remote else ""
     command = ["kit", "inspect", remote_flag, repo_path_with_tag]
     _run(command=command)
 
 def kit_list(repo_path_without_tag: Optional[str] = None):
-    command = ["kit", "list", repo_path_without_tag]
+    """
+    Lists the ModelKits available in the specified repository path.
+
+    Args:
+        repo_path_without_tag (Optional[str]): The path to the repository without the tag. 
+                                               If not provided, lists kits from the local registry.
+
+    Returns:
+        None
+    """
+    command = ["kit", "list"]
+    if repo_path_without_tag:
+        command.append(repo_path_without_tag)
     _run(command=command)
 
 def kit_login(user: str, passwd: str, registry: str = "jozu.ml"):
-    command = ["kit", "login", registry, "--username", user, "--password-stdin"]
+    """
+    Logs in to the specified registry using the provided username and password.
+
+    Args:
+        user (str): The username for the registry.
+        passwd (str): The password for the registry.
+        registry (str, optional): The registry URL. Defaults to "jozu.ml".
+
+    Returns:
+        None
+    """
+    command = [
+        "kit", "login", registry,
+        "--username", user,
+        "--password-stdin"
+    ]
     _run(command=command, input=passwd)
 
 def kit_logout(registry: str = "jozu.ml"):
+    """
+    Logs out from the specified registry.
+
+    Args:
+        registry (str, optional): The registry to log out from. Defaults to "jozu.ml".
+
+    Returns:
+        None
+    """
     command = ["kit", "logout", registry]
     _run(command=command)
 
 def kit_pack(repo_path_with_tag: str):
+    """
+    Packs the current directory into a ModelKit package with a specified tag.
+
+    Args:
+        repo_path_with_tag (str): The repository path along with the tag to be used for the package.
+
+    Returns:
+        None
+    """
     command = ["kit", "pack", ".", "--tag", repo_path_with_tag]
     _run(command=command)
 
-def kit_pull(repo_path_with_tag):
+def kit_pull(repo_path_with_tag: str):
+    """
+    Pulls the specified ModelKit from the remote registry.
+
+    Args:
+        repo_path_with_tag (str): The path to the repository along with the tag to pull.
+
+    Returns:
+        None
+    """
     command = ["kit", "pull", repo_path_with_tag]
     _run(command=command)
 
-def kit_push(repo_path_with_tag):
+def kit_push(repo_path_with_tag: str):
+    """
+    Pushes the specified ModelKit to the remote registry.
+
+    Args:
+        repo_path_with_tag (str): The path to the repository along with the tag to be pushed.
+
+    Returns:
+        None
+    """
     command = ["kit", "push", repo_path_with_tag]
     _run(command=command)
 
-def kit_remove(repo_path_with_tag, remote: Optional[bool] = True):
+def kit_remove(repo_path_with_tag: str, remote: Optional[bool] = True):
+    """
+    Remove a ModelKit from the registry.
+
+    Args:
+        repo_path_with_tag (str): The path to the repository with its tag.
+        remote (Optional[bool]): If True, the repository will be removed from the remote registry. Defaults to True.
+            Otherwise, the repository will be removed from the local registry.
+
+    Returns:
+        None
+    """
     remote_flag = "--remote" if remote else ""
     command = ["kit", "remove", remote_flag, repo_path_with_tag]
     _run(command=command)
 
-def kit_unpack(repo_path_with_tag):
+def kit_unpack(repo_path_with_tag: str):
+    """
+    Unpacks a ModelKit to the current directory from the remote registry.
+
+    This function constructs a command to unpack a kit repository and 
+    calls an internal function to execute the command.
+
+    Args:
+        repo_path_with_tag (str): The path to the repository along with the tag to be unpacked.
+
+    Returns:
+        None
+    """
     command = ["kit", "unpack", "--overwrite", repo_path_with_tag]
     _run(command=command)
 
-def _run(command: List[Any], input: Optional[str] =None):
-    print(' '.join(command), flush=True)
-    subprocess.run(command, input=input, text=True)
+def _run(command: List[Any], input: Optional[str] = None, verbose: bool = True):
+    """
+    Executes a command in the system shell.
+
+    Args:
+        command (List[Any]): The command to be executed as a list of strings.
+        input (Optional[str]): Optional input to be passed to the command.
+        verbose (bool): If True, print the command before executing. Defaults to True.
+
+    Returns:
+        None
+
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status.
+    """
+    if verbose:
+        print(' '.join(command), flush=True)
+    subprocess.run(command, input=input, text=True, check=True)
