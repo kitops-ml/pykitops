@@ -2,7 +2,7 @@ import subprocess
 from typing import Any, List, Optional
 
 
-def kit_info(repo_path_with_tag: str, remote: Optional[bool] = True):
+def info(repo_path_with_tag: str, remote: Optional[bool] = True):
     """
     Retrieve information about a kit repository.
 
@@ -17,7 +17,7 @@ def kit_info(repo_path_with_tag: str, remote: Optional[bool] = True):
     command = ["kit", "info", remote_flag, repo_path_with_tag]
     _run(command=command)
 
-def kit_inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
+def inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
     """
     Inspect a repository using the 'kit' command.
 
@@ -33,7 +33,7 @@ def kit_inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
     command = ["kit", "inspect", remote_flag, repo_path_with_tag]
     _run(command=command)
 
-def kit_list(repo_path_without_tag: Optional[str] = None):
+def list(repo_path_without_tag: Optional[str] = None):
     """
     Lists the ModelKits available in the specified repository path.
 
@@ -49,7 +49,7 @@ def kit_list(repo_path_without_tag: Optional[str] = None):
         command.append(repo_path_without_tag)
     _run(command=command)
 
-def kit_login(user: str, passwd: str, registry: str = "jozu.ml"):
+def login(user: str, passwd: str, registry: str = "jozu.ml"):
     """
     Logs in to the specified registry using the provided username and password.
 
@@ -68,7 +68,7 @@ def kit_login(user: str, passwd: str, registry: str = "jozu.ml"):
     ]
     _run(command=command, input=passwd)
 
-def kit_logout(registry: str = "jozu.ml"):
+def logout(registry: str = "jozu.ml"):
     """
     Logs out from the specified registry.
 
@@ -81,7 +81,7 @@ def kit_logout(registry: str = "jozu.ml"):
     command = ["kit", "logout", registry]
     _run(command=command)
 
-def kit_pack(repo_path_with_tag: str):
+def pack(repo_path_with_tag: str):
     """
     Packs the current directory into a ModelKit package with a specified tag.
 
@@ -94,7 +94,7 @@ def kit_pack(repo_path_with_tag: str):
     command = ["kit", "pack", ".", "--tag", repo_path_with_tag]
     _run(command=command)
 
-def kit_pull(repo_path_with_tag: str):
+def pull(repo_path_with_tag: str):
     """
     Pulls the specified ModelKit from the remote registry.
 
@@ -107,7 +107,7 @@ def kit_pull(repo_path_with_tag: str):
     command = ["kit", "pull", repo_path_with_tag]
     _run(command=command)
 
-def kit_push(repo_path_with_tag: str):
+def push(repo_path_with_tag: str):
     """
     Pushes the specified ModelKit to the remote registry.
 
@@ -120,7 +120,7 @@ def kit_push(repo_path_with_tag: str):
     command = ["kit", "push", repo_path_with_tag]
     _run(command=command)
 
-def kit_remove(repo_path_with_tag: str, remote: Optional[bool] = True):
+def remove(repo_path_with_tag: str, remote: Optional[bool] = True):
     """
     Remove a ModelKit from the registry.
 
@@ -136,7 +136,7 @@ def kit_remove(repo_path_with_tag: str, remote: Optional[bool] = True):
     command = ["kit", "remove", remote_flag, repo_path_with_tag]
     _run(command=command)
 
-def kit_unpack(repo_path_with_tag: str):
+def unpack(repo_path_with_tag: str):
     """
     Unpacks a ModelKit to the current directory from the remote registry.
 
