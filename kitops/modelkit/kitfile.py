@@ -67,8 +67,33 @@ class Kitfile:
             ...                  "license": "Apache-2.0", "parts": [],
             ...                  "parameters": ""}
             >>> kitfile.to_yaml()
-            'manifestVersion: 1.0\npackage:\n  name: my_package\n  version: 0.1.0\n  description: My package description\n  authors:\n  - Author 1\n  - Author 2\ncode:\n- path: code/\n  description: Code description\n  license: Apache-2.0\ndatasets:\n- name: my_dataset\n  path: datasets/\n  description: Dataset description\n  license: Apache-2.0\ndocs:\n- path: docs/\n  description: Docs description\nmodel:\n  name: my_model\n  path: model/\n  framework: tensorflow\n  version: 2.0.0\n  description: Model description\n  license: Apache-2.0\n  parts: []\n  parameters: ''\n'
-
+            'manifestVersion: 1.0
+             package:
+                 name: my_package
+                 version: 0.1.0
+                 description: My package description
+                 authors:
+                 - Author 1
+                 - Author 2
+             code:
+             - path: code/
+               description: Code description
+               license: Apache-2.0
+             datasets:
+             - name: my_dataset
+               path: datasets/
+               description: Dataset description
+               license: Apache-2.0
+             docs:
+             - path: docs/
+               description: Docs description
+             model:
+                 name: my_model
+                 path: model/
+                 framework: tensorflow
+                 version: 2.0.0
+                 description: Model description
+                 license: Apache-2.0'
 
         Args:
             path (str, optional): Path to existing Kitfile to load. Defaults to None.
@@ -81,7 +106,7 @@ class Kitfile:
                                      'code', 'datasets', 'docs', 'model'}
         
         # initialize the kitfile section validators
-        self.initialize_kitfile_section_validators()
+        self._initialize_kitfile_section_validators()
 
         # initialize an empty kitfile object
         self.manifestVersion = ""
@@ -95,9 +120,9 @@ class Kitfile:
                       "parts": [], "parameters": ""}
 
         if path:
-            self.load_from_file(path)
+            self.load(path)
 
-    def initialize_kitfile_section_validators(self):
+    def _initialize_kitfile_section_validators(self):
         """
         Initialize validators for Kitfile sections.
         """
@@ -126,9 +151,20 @@ class Kitfile:
                                                   "license", "parts", 
                                                   "parameters"})
 
-    def load_from_file(self, path):
+    def _validate_and_set_attributes(self, data: Dict[str, Any]):
         """
-        Load Kitfile data from a yaml-formatted file.
+        Validate and set attributes from the provided data.
+
+        Args:
+            data (Dict[str, Any]): Data to validate and set.
+        """
+        for key, value in data.items():
+            self.__setattr__(key, value)
+        
+    def load(self, path):
+        """
+        Load Kitfile data from a yaml-formatted file and set the
+        corresponding attributes.
 
         Args:
             path (str): Path to the Kitfile.
@@ -161,17 +197,7 @@ class Kitfile:
                      f"keys: {', '.join(self._kitfile_allowed_keys)}"
                     ) from e
         # kitfile has been successfully loaded into data
-        self.validate_and_set_attributes(data)
-
-    def validate_and_set_attributes(self, data: Dict[str, Any]):
-        """
-        Validate and set attributes from the provided data.
-
-        Args:
-            data (Dict[str, Any]): Data to validate and set.
-        """
-        for key, value in data.items():
-            self.__setattr__(key, value)
+        self._validate_and_set_attributes(data)
 
     @property
     def manifestVersion(self) -> str:
@@ -314,5 +340,38 @@ class Kitfile:
             dict_to_print = copy.deepcopy(self._data)
             dict_to_print = clean_empty_items(dict_to_print)
 
-        return yaml.dump(data = dict_to_print, sort_keys=False,
+        return yaml.safe_dump(data = dict_to_print, sort_keys=False,
                          default_flow_style=False)
+
+    def print(self):
+        """
+        Print the Kitfile to the console.
+
+        Returns:
+            None
+        """
+        print('\n\nKitfile Contents...')
+        print('===================\n')
+        print(self.to_yaml())
+
+    def save(self, path: str = "Kitfile", print: bool = True):
+        """
+        Save the Kitfile to a file.
+
+        Args:
+            path (str): Path to save the Kitfile. Defaults to "Kitfile".
+            print (bool): If True, print the Kitfile to the console. 
+                Defaults to True.
+
+        Returns:
+            None
+
+        Examples:
+            >>> kitfile = Kitfile()
+            >>> kitfile.save("path/to/Kitfile")
+        """
+        with open(path, 'w') as file:
+            file.write(self.to_yaml())
+
+        if print:
+            self.print()

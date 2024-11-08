@@ -1,7 +1,6 @@
 import subprocess
 from typing import Any, List, Optional
 
-
 def info(repo_path_with_tag: str, remote: Optional[bool] = True):
     """
     Retrieve information about a kit repository.
@@ -14,7 +13,9 @@ def info(repo_path_with_tag: str, remote: Optional[bool] = True):
         None
     """
     remote_flag = "--remote" if remote else ""
-    command = ["kit", "info", remote_flag, repo_path_with_tag]
+    command = ["kit", "info", 
+               remote_flag, 
+               repo_path_with_tag]
     _run(command=command)
 
 def inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
@@ -30,7 +31,9 @@ def inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
         None
     """
     remote_flag = "--remote" if remote else ""
-    command = ["kit", "inspect", remote_flag, repo_path_with_tag]
+    command = ["kit", "inspect", 
+               remote_flag, 
+               repo_path_with_tag]
     _run(command=command)
 
 def list(repo_path_without_tag: Optional[str] = None):
@@ -91,7 +94,8 @@ def pack(repo_path_with_tag: str):
     Returns:
         None
     """
-    command = ["kit", "pack", ".", "--tag", repo_path_with_tag]
+    command = ["kit", "pack", ".", 
+               "--tag", repo_path_with_tag]
     _run(command=command)
 
 def pull(repo_path_with_tag: str):
@@ -104,7 +108,8 @@ def pull(repo_path_with_tag: str):
     Returns:
         None
     """
-    command = ["kit", "pull", repo_path_with_tag]
+    command = ["kit", "pull", 
+               repo_path_with_tag]
     _run(command=command)
 
 def push(repo_path_with_tag: str):
@@ -117,7 +122,8 @@ def push(repo_path_with_tag: str):
     Returns:
         None
     """
-    command = ["kit", "push", repo_path_with_tag]
+    command = ["kit", "push", 
+               repo_path_with_tag]
     _run(command=command)
 
 def remove(repo_path_with_tag: str, remote: Optional[bool] = True):
@@ -133,24 +139,44 @@ def remove(repo_path_with_tag: str, remote: Optional[bool] = True):
         None
     """
     remote_flag = "--remote" if remote else ""
-    command = ["kit", "remove", remote_flag, repo_path_with_tag]
+    command = ["kit", "remove", 
+               remote_flag, 
+               repo_path_with_tag]
     _run(command=command)
 
-def unpack(repo_path_with_tag: str):
+def unpack(repo_path_with_tag: str, dir: str):
     """
-    Unpacks a ModelKit to the current directory from the remote registry.
+    Unpacks a ModelKit to the specified directory from the remote registry.
 
-    This function constructs a command to unpack a kit repository and 
+    This function constructs a command to unpack a ModelKit and 
     calls an internal function to execute the command.
 
     Args:
-        repo_path_with_tag (str): The path to the repository along with the tag to be unpacked.
+        repo_path_with_tag (str): The path to the repository along with 
+            the tag to be unpacked.
+        dir (str): The directory to unpack the ModelKit to.
 
     Returns:
         None
     """
-    command = ["kit", "unpack", "--overwrite", repo_path_with_tag]
+    command = ["kit", "unpack", 
+               "--dir", dir, 
+               "--overwrite", 
+               repo_path_with_tag]
     _run(command=command)
+
+def version():
+    """
+    Lists the version of the KitOps Command-line Interface (CLI).
+
+    Args:
+        None
+    Returns:
+        None
+    """
+    command = ["kit", "version"]
+    _run(command=command)
+
 
 def _run(command: List[Any], input: Optional[str] = None, verbose: bool = True):
     """
@@ -168,5 +194,5 @@ def _run(command: List[Any], input: Optional[str] = None, verbose: bool = True):
         subprocess.CalledProcessError: If the command returns a non-zero exit status.
     """
     if verbose:
-        print(' '.join(command), flush=True)
+        print('% ' + ' '.join(command), flush=True)
     subprocess.run(command, input=input, text=True, check=True)

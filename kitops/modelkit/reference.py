@@ -21,8 +21,8 @@ class ModelKitReference:
             Gets or sets the registry.
         namespace:
             Gets or sets the namespace.
-        model:
-            Gets or sets the model name.
+        repository:
+            Gets or sets the repository name.
         tag:
             Gets or sets the tag.
     """
@@ -40,26 +40,28 @@ class ModelKitReference:
             'jozu.ml'
             >>> ref.namespace
             'jozu-demos'
-            >>> ref.model
+            >>> ref.repository
             'titanic-survivability'
             >>> ref.tag
             'latest'
         """
         if not modelkit_tag:
-            self._registry = None
-            self._namespace = None
-            self._model = None
-            self._tag = None
+            self.registry = None
+            self.namespace = None
+            self.repository = None
+            self.tag = None
         else:
             # try to parse the modelkit tag into its components. 
             try:
                 parts = parse_modelkit_tag(modelkit_tag)
-                self._registry = parts.get("registry")
-                self._namespace = parts.get("namespace")
-                self._model = parts.get("model")
-                self._tag = parts.get("tag")
+                self.registry = parts.get("registry")
+                self.namespace = parts.get("namespace")
+                self.repository = parts.get("model")
+                self.tag = parts.get("tag")
             except ValueError as e:
-                raise ValueError(f"Error parsing modelkit tag: {modelkit_tag}") from e
+                raise ValueError(
+                        f"Error parsing modelkit tag: {modelkit_tag}"
+                      ) from e
 
     @property
     def registry(self) -> Optional[str]:
@@ -124,38 +126,38 @@ class ModelKitReference:
         self._namespace = value
 
     @property
-    def model(self) -> Optional[str]:
+    def repository(self) -> Optional[str]:
         """
-        Gets the model name.
+        Gets the repository name.
         
         Examples:
             >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
-            >>> ref.model = "new_model"
-            >>> ref.model
-            'new_model'    
+            >>> ref.repository = "new_model"
+            >>> ref.repository
+            'new_repository'    
         """
-        return self._model
+        return self._repository
     
-    @model.setter
-    def model(self, value: Optional[str]):
+    @repository.setter
+    def repository(self, value: Optional[str]):
         """
-        Sets the model name.
+        Sets the repository name.
         
         Args:
-            value (str): The model name to set.
+            value (str): The repository name to set.
             
             Raises:
-                ValueError: If the model name is not a string or is None.
+                ValueError: If the repository name is not a string or is None.
                 
             Examples:
                 >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
-                >>> ref.model = "new_model"
-                >>> ref.model
-                'new_model'
+                >>> ref.repository = "new_repository"
+                >>> ref.repository
+                'new_repository'
         """
         if value is not None and not isinstance(value, str):
             raise ValueError("Model name must be a string.")
-        self._model = value
+        self._repository = value
 
     @property
     def tag(self) -> Optional[str]:
@@ -190,3 +192,15 @@ class ModelKitReference:
         if value is not None and not isinstance(value, str):
             raise ValueError("Tag must be a string or None.")
         self._tag = value
+
+    @property
+    def modelkit_tag(self):
+        if not self.registry:
+            raise ValueError("Registry must be set to a non-empty string.")
+        if not self.namespace:
+            raise ValueError("Namespace must be set to a non-empty string.")
+        if not self.repository:
+            raise ValueError("Repository must be set to a non-empty string.")
+        if not self.tag:
+            raise ValueError("tag must be set to a non-empty string.")
+        return f"{self.registry}/{self.namespace}/{self.repository}:{self.tag}"

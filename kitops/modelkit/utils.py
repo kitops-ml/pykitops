@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 '''
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 from typing import Any, Dict, Set
 
 def validate_dict(value: Dict[str, Any], allowed_keys: Set[str]):
@@ -92,6 +93,24 @@ def clean_empty_items(d: Any) -> Any:
         return cleaned_list
 
     return d
+
+def get_or_create_directory(directory: str) -> str:
+    """
+    Get or create a directory.
+
+    Examples:
+        >>> get_or_create_directory("my-directory")
+        "my-directory"
+
+    Args:
+        directory (str): Directory to get or create.
+
+    Returns:
+        str: The directory.
+    """
+    path = Path(directory)
+    path.mkdir(parents=True, exist_ok=True)
+    return path.as_posix()
 
 def parse_modelkit_tag(tag: str) -> Dict[str, str]:
     """

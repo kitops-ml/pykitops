@@ -49,17 +49,17 @@ class UserCredentials:
         """
         try:
             vars = load_environment_variables()
-            self._username = username or vars.get("username")
-            self._password = password or vars.get("password")
-            self._registry = registry or vars.get("registry")
-            self._namespace = namespace or vars.get("namespace")
+            self.username = username or vars.get("username")
+            self.password = password or vars.get("password")
+            self.registry = registry or vars.get("registry")
+            self.namespace = namespace or vars.get("namespace")
         except ValueError as e:
             if not username or not password:
                 raise ValueError("Username and password must be provided either as arguments or in environment variables.") from e
-            self._username = username
-            self._password = password
-            self._registry = registry
-            self._namespace = namespace
+            self.username = username
+            self.password = password
+            self.registry = registry
+            self.namespace = namespace
   
     @property
     def username(self) -> Optional[str]:
