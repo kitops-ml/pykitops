@@ -24,7 +24,7 @@ import yaml
 from pathlib import Path
 from typing import Any, Dict, List, Set
 
-from .utils import clean_empty_items, validate_dict
+from .utils import clean_empty_items, validate_dict, Color, IS_A_TTY
 from .validators.code_validator import CodeValidator
 from .validators.datasets_validator import DatasetsValidator
 from .validators.docs_validator import DocsValidator
@@ -99,7 +99,7 @@ class Kitfile:
             path (str, optional): Path to existing Kitfile to load. Defaults to None.
 
         Returns:
-            Kitfile: Kitfile object.
+            Kitfile (Kitfile): Kitfile object.
         """
         self._data: Dict = {}
         self._kitfile_allowed_keys = {'manifestVersion', 'package', 
@@ -343,7 +343,7 @@ class Kitfile:
         return yaml.safe_dump(data = dict_to_print, sort_keys=False,
                          default_flow_style=False)
 
-    def print(self):
+    def print(self) -> None:
         """
         Print the Kitfile to the console.
 
@@ -352,9 +352,12 @@ class Kitfile:
         """
         print('\n\nKitfile Contents...')
         print('===================\n')
-        print(self.to_yaml())
+        output = self.to_yaml()
+        if IS_A_TTY:
+            output = f"{Color.GREEN.value}{output}{Color.RESET.value}"
+        print(output)
 
-    def save(self, path: str = "Kitfile", print: bool = True):
+    def save(self, path: str = "Kitfile", print: bool = True) -> None:
         """
         Save the Kitfile to a file.
 

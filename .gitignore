@@ -163,3 +163,8 @@ cython_debug/
 
 # VS Code
 .vscode
+
+# Personal
+temp/
+work/
+working/

@@ -152,7 +152,7 @@ class ModelKitManager:
         """
         self._kitfile = value
 
-    def unpack_modelkit(self, load_kitfile: bool = False):
+    def pull_and_unpack_modelkit(self, load_kitfile: bool = False):
         """
         Unpacks the ModelKit into the working directory.
 
@@ -167,6 +167,7 @@ class ModelKitManager:
         kit.login(user = self.user_credentials.username, 
                   passwd = self.user_credentials.password,
                   registry = self.modelkit_reference.registry)
+        kit.pull(self.modelkit_reference.modelkit_tag)
         kit.unpack(self.modelkit_reference.modelkit_tag, 
                    dir = self.working_directory)
         kit.logout(registry = self.modelkit_reference.registry)
@@ -184,7 +185,7 @@ class ModelKitManager:
             save_kitfile (bool): If True, the Kitfile will be saved to 
             the working directory before the Kitfile is packed and
             pushed. Defaults to False.
-            
+
         Returns:
             None
         """
@@ -204,3 +205,34 @@ class ModelKitManager:
 
         # return to the original directory
         os.chdir(current_directory)
+
+    def remove_modelkit(self, local: Optional[bool] = False,
+                        remote: Optional[bool] = False):
+        """
+        Removes the ModelKit from the registry.
+
+        Args:
+            local (Optional[bool]): If True, the ModelKit will be removed
+                from the local registry. Defaults to True.
+            remote (Optional[bool]): If True, the ModelKit will be removed 
+                from the remote registry.
+
+        Returns:
+            None
+
+        Examples:
+            >>> modelkit_tag = "jozu.ml/brett/titanic-survivability:latest"
+            >>> manager = ModelKitManager(working_directory = "temp/titanic-full",
+            ...                           modelkit_tag = modelkit_tag)
+            >>> manager.remove_modelkit(local = True, remote = True)
+        """
+        kit.login(user = self.user_credentials.username, 
+                  passwd = self.user_credentials.password,
+                  registry = self.modelkit_reference.registry)
+        if local:
+            kit.remove(self.modelkit_reference.modelkit_tag, remote = False)
+
+        if remote:
+            kit.remove(self.modelkit_reference.modelkit_tag, remote = True)
+
+        kit.logout(registry = self.modelkit_reference.registry)

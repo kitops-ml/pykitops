@@ -1,5 +1,6 @@
 import subprocess
 from typing import Any, List, Optional
+from ..modelkit.utils import Color, IS_A_TTY
 
 def info(repo_path_with_tag: str, remote: Optional[bool] = True):
     """
@@ -12,10 +13,11 @@ def info(repo_path_with_tag: str, remote: Optional[bool] = True):
     Returns:
         None
     """
-    remote_flag = "--remote" if remote else ""
-    command = ["kit", "info", 
-               remote_flag, 
+    remote_flag = "--remote" if remote else None
+    command = ["kit", "info",  
                repo_path_with_tag]
+    if remote_flag:
+        command.append(remote_flag)
     _run(command=command)
 
 def inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
@@ -30,10 +32,11 @@ def inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
     Returns:
         None
     """
-    remote_flag = "--remote" if remote else ""
+    remote_flag = "--remote" if remote else None
     command = ["kit", "inspect", 
-               remote_flag, 
-               repo_path_with_tag]
+                repo_path_with_tag]
+    if remote_flag:
+        command.append(remote_flag)
     _run(command=command)
 
 def list(repo_path_without_tag: Optional[str] = None):
@@ -138,11 +141,16 @@ def remove(repo_path_with_tag: str, remote: Optional[bool] = True):
     Returns:
         None
     """
-    remote_flag = "--remote" if remote else ""
-    command = ["kit", "remove", 
-               remote_flag, 
+    remote_flag = "--remote" if remote else None
+    command = ["kit", "remove",  
                repo_path_with_tag]
-    _run(command=command)
+    if remote_flag:
+        command.append(remote_flag)
+    try:
+        _run(command=command)
+    except subprocess.CalledProcessError as e:
+        # If the repository is not found in the registry, ignore the error
+        pass
 
 def unpack(repo_path_with_tag: str, dir: str):
     """
@@ -194,5 +202,8 @@ def _run(command: List[Any], input: Optional[str] = None, verbose: bool = True):
         subprocess.CalledProcessError: If the command returns a non-zero exit status.
     """
     if verbose:
-        print('% ' + ' '.join(command), flush=True)
+        output = '% ' + ' '.join(command)
+        if IS_A_TTY:
+            output = f"{Color.CYAN.value}{output}{Color.RESET.value}"
+        print(output, flush=True)
     subprocess.run(command, input=input, text=True, check=True)
