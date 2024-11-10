@@ -1,5 +1,3 @@
 tox
 tox-conda
-mkdocs
-"mkdocstrings[python]"
-mkdocs-material
+

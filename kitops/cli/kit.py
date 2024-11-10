@@ -1,8 +1,11 @@
 import subprocess
 from typing import Any, List, Optional
 from ..modelkit.utils import Color, IS_A_TTY
+from .utils import _process_command_flags
 
-def info(repo_path_with_tag: str, remote: Optional[bool] = True):
+
+def info(repo_path_with_tag: str, 
+         filters: Optional[List[str]] = None, **kwargs):
     """
     Retrieve information about a kit repository.
 
@@ -13,14 +16,17 @@ def info(repo_path_with_tag: str, remote: Optional[bool] = True):
     Returns:
         None
     """
-    remote_flag = "--remote" if remote else None
     command = ["kit", "info",  
                repo_path_with_tag]
-    if remote_flag:
-        command.append(remote_flag)
+    if filters:
+        for filter in filters:
+            command.append("--filter")
+            command.append(filter)
+ 
+    command.extend(_process_command_flags(kit_cmd_name="info", **kwargs))
     _run(command=command)
 
-def inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
+def inspect(repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs):
     """
     Inspect a repository using the 'kit' command.
 
@@ -32,14 +38,13 @@ def inspect(repo_path_with_tag: str, remote: Optional[bool] = True):
     Returns:
         None
     """
-    remote_flag = "--remote" if remote else None
     command = ["kit", "inspect", 
                 repo_path_with_tag]
-    if remote_flag:
-        command.append(remote_flag)
+
+    command.extend(_process_command_flags(kit_cmd_name="inspect", **kwargs))
     _run(command=command)
 
-def list(repo_path_without_tag: Optional[str] = None):
+def list(repo_path_without_tag: Optional[str] = None, **kwargs):
     """
     Lists the ModelKits available in the specified repository path.
 
@@ -53,9 +58,11 @@ def list(repo_path_without_tag: Optional[str] = None):
     command = ["kit", "list"]
     if repo_path_without_tag:
         command.append(repo_path_without_tag)
+
+    command.extend(_process_command_flags(kit_cmd_name="list", **kwargs))
     _run(command=command)
 
-def login(user: str, passwd: str, registry: str = "jozu.ml"):
+def login(user: str, passwd: str, registry: str = "jozu.ml", **kwargs):
     """
     Logs in to the specified registry using the provided username and password.
 
@@ -72,9 +79,11 @@ def login(user: str, passwd: str, registry: str = "jozu.ml"):
         "--username", user,
         "--password-stdin"
     ]
+
+    command.extend(_process_command_flags(kit_cmd_name="login", **kwargs))
     _run(command=command, input=passwd)
 
-def logout(registry: str = "jozu.ml"):
+def logout(registry: str = "jozu.ml", **kwargs):
     """
     Logs out from the specified registry.
 
@@ -85,9 +94,11 @@ def logout(registry: str = "jozu.ml"):
         None
     """
     command = ["kit", "logout", registry]
+
+    command.extend(_process_command_flags(kit_cmd_name="logout", **kwargs))
     _run(command=command)
 
-def pack(repo_path_with_tag: str):
+def pack(repo_path_with_tag: str, **kwargs):
     """
     Packs the current directory into a ModelKit package with a specified tag.
 
@@ -99,9 +110,11 @@ def pack(repo_path_with_tag: str):
     """
     command = ["kit", "pack", ".", 
                "--tag", repo_path_with_tag]
+
+    command.extend(_process_command_flags(kit_cmd_name="pack", **kwargs))
     _run(command=command)
 
-def pull(repo_path_with_tag: str):
+def pull(repo_path_with_tag: str, **kwargs):
     """
     Pulls the specified ModelKit from the remote registry.
 
@@ -113,9 +126,11 @@ def pull(repo_path_with_tag: str):
     """
     command = ["kit", "pull", 
                repo_path_with_tag]
+
+    command.extend(_process_command_flags(kit_cmd_name="pull", **kwargs))
     _run(command=command)
 
-def push(repo_path_with_tag: str):
+def push(repo_path_with_tag: str, **kwargs):
     """
     Pushes the specified ModelKit to the remote registry.
 
@@ -127,32 +142,33 @@ def push(repo_path_with_tag: str):
     """
     command = ["kit", "push", 
                repo_path_with_tag]
+
+    command.extend(_process_command_flags(kit_cmd_name="push", **kwargs))
     _run(command=command)
 
-def remove(repo_path_with_tag: str, remote: Optional[bool] = True):
+def remove(repo_path_with_tag: str, **kwargs):
     """
     Remove a ModelKit from the registry.
 
     Args:
         repo_path_with_tag (str): The path to the repository with its tag.
-        remote (Optional[bool]): If True, the repository will be removed from the remote registry. Defaults to True.
-            Otherwise, the repository will be removed from the local registry.
 
     Returns:
         None
     """
-    remote_flag = "--remote" if remote else None
     command = ["kit", "remove",  
                repo_path_with_tag]
-    if remote_flag:
-        command.append(remote_flag)
+
+    command.extend(_process_command_flags(kit_cmd_name="remove", **kwargs))
+
     try:
         _run(command=command)
     except subprocess.CalledProcessError as e:
         # If the repository is not found in the registry, ignore the error
         pass
 
-def unpack(repo_path_with_tag: str, dir: str):
+def unpack(repo_path_with_tag: str, dir: str, 
+           filters: Optional[List[str]], **kwargs):
     """
     Unpacks a ModelKit to the specified directory from the remote registry.
 
@@ -169,24 +185,33 @@ def unpack(repo_path_with_tag: str, dir: str):
     """
     command = ["kit", "unpack", 
                "--dir", dir, 
-               "--overwrite", 
                repo_path_with_tag]
+    if filters:
+        for filter in filters:
+            command.append("--filter")
+            command.append(filter)
+
+    command.extend(_process_command_flags(kit_cmd_name="unpack", **kwargs))
     _run(command=command)
 
-def version():
+def version(**kwargs):
     """
     Lists the version of the KitOps Command-line Interface (CLI).
 
     Args:
         None
+
     Returns:
         None
     """
     command = ["kit", "version"]
+
+    command.extend(_process_command_flags(kit_cmd_name="version", **kwargs))
     _run(command=command)
 
 
-def _run(command: List[Any], input: Optional[str] = None, verbose: bool = True):
+def _run(command: List[Any], input: Optional[str] = None, 
+         verbose: bool = True, **kwargs):
     """
     Executes a command in the system shell.
 
@@ -206,4 +231,5 @@ def _run(command: List[Any], input: Optional[str] = None, verbose: bool = True):
         if IS_A_TTY:
             output = f"{Color.CYAN.value}{output}{Color.RESET.value}"
         print(output, flush=True)
+
     subprocess.run(command, input=input, text=True, check=True)
