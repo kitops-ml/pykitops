@@ -64,13 +64,14 @@ def _get_compression_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed compression flag, if provided; otherwise, an empty list.
+        List[str]: The processed compression flag, if provided; otherwise, 
+            an empty list.
     """
     return _process_flag(full_key_name="compression", 
                          has_value_part=True, **kwargs)
 
 def _get_concurrency_flag(**kwargs) -> List[str]:
-    """
+    """ 
     Processes the concurrency flag for the KitOps CLI command, if provided.
 
     Args:
@@ -78,7 +79,8 @@ def _get_concurrency_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed concurrency flag, if provided; otherwise, an empty list.
+        List[str]: The processed concurrency flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="concurrency", 
                   has_value_part=True, **kwargs)
@@ -92,7 +94,8 @@ def _get_dir_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed dir flag, if provided; otherwise, an empty list.
+        List[str]: The processed dir flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="dir", abbr_key_name="d", 
                          has_value_part=True, **kwargs)
@@ -106,7 +109,8 @@ def _get_file_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed file flag, if provided; otherwise, an empty list.
+        List[str]: The processed file flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="file", abbr_key_name="f", 
                          has_value_part=True, **kwargs)
@@ -120,7 +124,8 @@ def _get_force_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed force flag, if provided; otherwise, an empty list.
+        List[str]: The processed force flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="force", abbr_key_name="f", **kwargs)
 
@@ -133,7 +138,8 @@ def _get_key_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed key flag, if provided; otherwise, an empty list.
+        List[str]: The processed key flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="key", has_value_part=True, **kwargs)
 
@@ -142,11 +148,12 @@ def _get_overwrite_flag(**kwargs) -> List[str]:
     Processes the overwrite flag for the KitOps CLI command, if provided.
 
     Args:
-        **kwargs: The arguments from which to extract the overwrite flag to be 
-        processed, if provided.
+        **kwargs: The arguments from which to extract the overwrite flag 
+        to be processed, if provided.
 
     Returns:
-        List[str]: The processed overwrite flag, if provided; otherwise, an empty list.
+        List[str]: The processed overwrite flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="overwrite", abbr_key_name="o", **kwargs)
 
@@ -173,7 +180,8 @@ def _get_proxy_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed proxy flag, if provided; otherwise, an empty list.
+        List[str]: The processed proxy flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="proxy", has_value_part=True, **kwargs)
 
@@ -186,20 +194,23 @@ def _get_remote_flag(**kwargs) -> List[str]:
         processed, if provided.
 
     Returns:
-        List[str]: The processed remote flag, if provided; otherwise, an empty list.
+        List[str]: The processed remote flag, if provided; otherwise, 
+        an empty list.
     """
     return _process_flag(full_key_name="remote", abbr_key_name="r", **kwargs)
 
 def _get_show_update_notifications_flag(**kwargs) -> List[str]:
     """
-    Processes the show-update-notifications flag for the KitOps CLI command, if provided.
+    Processes the show-update-notifications flag for the KitOps CLI command, 
+    if provided.
 
     Args:
         **kwargs: The arguments from which to extract the show-update-notifications 
         flag to be processed, if provided.
 
     Returns:
-        List[str]: The processed show-update-notifications flag, if provided; otherwise,
+        List[str]: The processed show-update-notifications flag, if provided; 
+        otherwise,
             an empty list.
     """
     return _process_flag(full_key_name="show-update-notifications", **kwargs)
@@ -287,7 +298,7 @@ def _process_command_flags(kit_cmd_name: str, **kwargs) -> List[str]:
 
     if kit_cmd_name in ["unpack"]:
         flags.extend(_get_overwrite_flag(**kwargs))
-            
+
     if kit_cmd_name in ["version"]:
         flags.extend(_get_show_update_notifications_flag(**kwargs))
 
