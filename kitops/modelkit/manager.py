@@ -152,14 +152,20 @@ class ModelKitManager:
         """
         self._kitfile = value
 
-    def pull_and_unpack_modelkit(self, load_kitfile: bool = False):
+    def pull_and_unpack_modelkit(self, load_kitfile: bool = False,
+                                 filters: Optional[list[str]] = None):
         """
         Unpacks the ModelKit into the working directory.
 
         Args:
+            filters (Optional[list[str]]): The filters to apply when 
+                unpacking the ModelKit.  Defaults to None.  The filters
+                are used to specify the Kitfile parts to unpack from the
+                ModelKit (e.g. ["model", "data"]). If None, all parts
+                are unpacked.
             load_kitfile (bool): If True, the Kitfile will be loaded 
-            from the working directory afer the ModelKit has been
-            unpacked. Defaults to False.
+                from the working directory afer the ModelKit has been
+                unpacked. Defaults to False.
 
         Returns:
             None
@@ -167,7 +173,11 @@ class ModelKitManager:
         kit.login(user = self.user_credentials.username, 
                   passwd = self.user_credentials.password,
                   registry = self.modelkit_reference.registry)
-        kit.pull(self.modelkit_reference.modelkit_tag)
+        
+        if not filters:
+            # If no filters are provided, go ahead and issue a pull request
+            # before unpacking; otherwise, issue the unpack request only.
+            kit.pull(self.modelkit_reference.modelkit_tag)
         kit.unpack(self.modelkit_reference.modelkit_tag, 
                    dir = self.working_directory)
         kit.logout(registry = self.modelkit_reference.registry)

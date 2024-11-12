@@ -167,8 +167,33 @@ def remove(repo_path_with_tag: str, **kwargs):
         # If the repository is not found in the registry, ignore the error
         pass
 
+def tag(repo_path_with_tag: str, repo_path_with_new_tag: str, **kwargs):
+    """
+    Tag a ModelKit with a new tag.
+
+    Args:
+        repo_path_with_tag (str): The path to the repository with its tag.
+        repo_path_with_new_tag (str): The new tag to be assigned to the ModelKit.
+
+    Returns:
+        None
+
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status
+
+    Examples:
+        >>> tag("jozu.ml/brett/titanic-survivability:latest", 
+                "jozu.ml/brett/titanic-survivability:v2")
+    """
+    command = ["kit", "tag", 
+               repo_path_with_tag, 
+               repo_path_with_new_tag]
+
+    command.extend(_process_command_flags(kit_cmd_name="tag", **kwargs))
+    _run(command=command)
+
 def unpack(repo_path_with_tag: str, dir: str, 
-           filters: Optional[List[str]], **kwargs):
+           filters: Optional[List[str]] = None, **kwargs):
     """
     Unpacks a ModelKit to the specified directory from the remote registry.
 
