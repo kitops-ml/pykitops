@@ -168,3 +168,4 @@ cython_debug/
 temp/
 work/
 working/
+.pypirc
