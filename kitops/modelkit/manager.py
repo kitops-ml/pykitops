@@ -73,7 +73,7 @@ class ModelKitManager:
             self.modelkit_reference = ModelKitReference(modelkit_tag)
 
     @property
-    def working_directory(self):
+    def working_directory(self) -> str:
         """
         Gets the working directory.
         
@@ -113,7 +113,7 @@ class ModelKitManager:
         self._user_credentials = value
 
     @property
-    def modelkit_reference(self):
+    def modelkit_reference(self) -> ModelKitReference:
         """
         Gets the modelkit reference.
         
@@ -133,7 +133,7 @@ class ModelKitManager:
         self._modelkit_reference = value
 
     @property
-    def kitfile(self):
+    def kitfile(self) -> Kitfile:
         """
         Gets the Kitfile.
         
@@ -143,7 +143,7 @@ class ModelKitManager:
         return self._kitfile
     
     @kitfile.setter
-    def kitfile(self, value: Kitfile):
+    def kitfile(self, value: Kitfile) -> None:
         """
         Sets the Kitfile.
         
@@ -153,7 +153,7 @@ class ModelKitManager:
         self._kitfile = value
 
     def pull_and_unpack_modelkit(self, load_kitfile: bool = False,
-                                 filters: Optional[list[str]] = None):
+                                 filters: Optional[list[str]] = None) -> None:
         """
         Unpacks the ModelKit into the working directory.
 
@@ -186,15 +186,15 @@ class ModelKitManager:
             kitfile_path = self.working_directory + "/Kitfile"
             self.kitfile = Kitfile(kitfile_path)
 
-    def pack_and_push_modelkit(self, save_kitfile: bool = False):
+    def pack_and_push_modelkit(self, save_kitfile: bool = False) -> None:
         """
         Packs the ModelKit from the working directory and pushes it 
         to the registry.
 
         Args:
             save_kitfile (bool): If True, the Kitfile will be saved to 
-            the working directory before the Kitfile is packed and
-            pushed. Defaults to False.
+                the working directory before the Kitfile is packed and
+                pushed. Defaults to False.
 
         Returns:
             None
@@ -217,7 +217,7 @@ class ModelKitManager:
         os.chdir(current_directory)
 
     def remove_modelkit(self, local: Optional[bool] = False,
-                        remote: Optional[bool] = False):
+                        remote: Optional[bool] = False) -> None:
         """
         Removes the ModelKit from the registry.
 

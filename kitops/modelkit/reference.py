@@ -34,7 +34,7 @@ class ModelKitReference:
             modelkit_tag (Optional[str]): The tag to parse. It should be in the form of:
                 {registry}/{namespace}/{model}:{tag}
             
-            Examples:
+        Examples:
             >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
             >>> ref.registry
             'jozu.ml'

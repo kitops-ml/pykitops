@@ -1,19 +1,11 @@
 This site contains the project documentation for the
-`KitOps Manager` project. Its aim is to provide a python library for
+`KitOps Manager` project. It aims to provide a python library for
 easily working with [KitOps' ModelKits](https://kitops.ml).
 
 ## Table Of Contents
 
-The documentation follows the best practice for
-project documentation as described by Daniele Procida
-in the [Diátaxis documentation framework](https://diataxis.fr/)
-and consists of four separate parts:
+The documentation consists of three parts:
 
-1. [Tutorials](tutorials.md)
+1. [Before You Begin](before-you-begin.md) 
 2. [How-To Guides](how-to-guides.md)
-3. [Reference](reference.md)
-4. [Explanation](explanation.md)
-
-Quickly find what you're looking for depending on
-your use case by looking at the different pages.
-
+3. [API Reference](reference/index.md)

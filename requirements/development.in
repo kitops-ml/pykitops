@@ -1,8 +1,0 @@
--r base.in
-
-pip-compile-multi
-mypy
-pytest
-pytest-cov
-tox
-tox-conda

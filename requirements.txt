@@ -4,3 +4,6 @@ types-PyYAML
 mkdocs
 "mkdocstrings[python]"
 mkdocs-material
+pytest
+py
+mypy
