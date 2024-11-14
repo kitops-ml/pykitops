@@ -72,7 +72,7 @@ def list(repo_path_without_tag: Optional[str] = None, **kwargs) -> None:
     command.extend(_process_command_flags(kit_cmd_name="list", **kwargs))
     _run(command=command)
 
-def login(user: str, passwd: str, registry: str = "jozu.ml", **kwargs) -> None:
+def login(user: str, passwd: str, registry: Optional[str] = "jozu.ml", **kwargs) -> None:
     """
     Logs in to the specified registry using the provided username and password.
 
@@ -94,7 +94,7 @@ def login(user: str, passwd: str, registry: str = "jozu.ml", **kwargs) -> None:
     command.extend(_process_command_flags(kit_cmd_name="login", **kwargs))
     _run(command=command, input=passwd)
 
-def logout(registry: str = "jozu.ml", **kwargs) -> None:
+def logout(registry: Optional[str] = "jozu.ml", **kwargs) -> None:
     """
     Logs out from the specified registry.
 
