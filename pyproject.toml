@@ -18,5 +18,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/jozu-ai/pymodelkit"
-Issues = "https://github.com/jozu-ai/pymodelkit/issues"
+Homepage = "https://github.com/jozu-ai/pykitops"
+Issues = "https://github.com/jozu-ai/pykitops/issues"
