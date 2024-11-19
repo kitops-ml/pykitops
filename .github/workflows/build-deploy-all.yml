@@ -12,7 +12,7 @@ jobs:
     env:
       PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
       PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
     steps:
       # Checkout the repository
@@ -40,15 +40,15 @@ jobs:
       # Configure Git author identity 
       - name: Configure Git author 
         run: | 
-          git config --global user.email "brett@jozu.com" 
-          git config --global user.name "brett-hodges"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+          git config --global user.name "github-actions[bot]"
           
       # Bump version
       - name: Bump version and push tag
         run: |
           bump2version patch  # You can specify 'patch', 'minor', or 'major' based on your versioning needs
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       # Build the package distributables and publish to PyPI 
       - name: Build package 
