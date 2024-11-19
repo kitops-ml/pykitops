@@ -34,6 +34,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install hatch twine mkdocs mkdocs-material bump2version
 
+      # Configure Git author identity 
+      - name: Configure Git author 
+        run: | 
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+          git config --global user.name "github-actions[bot]"
+          
       # Bump version
       - name: Bump version and push tag
         run: |
