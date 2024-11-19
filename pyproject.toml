@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "PyYAML"]
+requires = ["hatchling", "hatch", "PyYAML"]
 build-backend = "hatchling.build"
 
 [project]
