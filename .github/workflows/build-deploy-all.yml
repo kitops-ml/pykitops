@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install hatch twine mkdocs mkdocs-material bump2version
+          pip install hatch twine mkdocs mkdocs-material "mkdocstrings[python]" bump2version
 
       # Configure Git author identity 
       - name: Configure Git author 
