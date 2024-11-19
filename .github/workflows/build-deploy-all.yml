@@ -15,7 +15,7 @@ jobs:
     env:
       PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
       PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITOPS_PAT }}
 
     steps:
       # Checkout the repository
@@ -39,7 +39,7 @@ jobs:
         run: |
           bump2version patch  # You can specify 'patch', 'minor', or 'major' based on your versioning needs
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITOPS_PAT }}
       
       # Build the package distributables and publish to PyPI 
       - name: Build package 
