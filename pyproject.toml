@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kitops"
-version = "1.0.4"
+version = "1.0.5"
 authors = [
   { name="Brett Hodges", email="brett@jozu.com" },
 ]
