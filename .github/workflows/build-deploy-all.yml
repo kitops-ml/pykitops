@@ -1,9 +1,6 @@
 name: Build and Deploy Package and Docs
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
