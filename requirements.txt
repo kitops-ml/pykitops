@@ -6,4 +6,3 @@ mkdocs
 mkdocs-material
 pytest
 py
-bump2version
