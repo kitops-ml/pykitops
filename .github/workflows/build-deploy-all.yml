@@ -5,6 +5,18 @@ on:
     branches:
       - main
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+  PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  id-token: write
+  attestations: write
+  
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
