@@ -42,12 +42,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install hatch twine mkdocs mkdocs-material "mkdocstrings[python]" bump2version
-
-      # Build and deploy mkdocs to GitHub Pages
-      - name: Build and deploy mkdocs
-        run: |
-          mkdocs build
-          mkdocs gh-deploy --force
           
       # Configure Git author identity 
       - name: Configure Git author 
@@ -59,6 +53,8 @@ jobs:
       - name: Bump version and push tag
         run: |
           bump2version patch  # You can specify 'patch', 'minor', or 'major' based on your versioning needs
+          git push origin --tags
+          git push origin
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -72,3 +68,9 @@ jobs:
         env: 
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+
+      # Build and deploy mkdocs to GitHub Pages
+      - name: Build and deploy mkdocs
+        run: |
+          mkdocs build
+          mkdocs gh-deploy --force
