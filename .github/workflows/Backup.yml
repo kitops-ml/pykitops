@@ -1,4 +1,4 @@
-name: Build and Deploy Package and Docs
+name: Backup
 
 on:
   pull_request:
