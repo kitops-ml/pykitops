@@ -1,14 +1,20 @@
 name: Build and Deploy Package and Docs
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs: 
+      version_type: 
+        description: 'Select the version type to bump' 
+        required: true 
+        default: 'patch' 
+        type: choice 
+        options: 
+          - patch
+          - minor
+          - major
 
 env:
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-  PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
 permissions:
   contents: write
@@ -22,8 +28,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
     steps:
@@ -49,28 +53,39 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com" 
           git config --global user.name "github-actions[bot]"
           
-      # Bump version
-      - name: Bump version and push tag
+      # Bump version based on input
+      - name: Bump version
         run: |
-          bump2version patch  # You can specify 'patch', 'minor', or 'major' based on your versioning needs
+          bump2version ${{ github.event.inputs.version_type }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      # Push changes
+      - name: Push changes
+        run: |
           git push origin --tags
           git push origin
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      # Build the package distributables and publish to PyPI 
+      # Build the package distributables
       - name: Build package 
         run: | 
           hatch build
-      
-      - name: Publish package to PyPI 
+
+      # Publish the distributables to PyPI 
+      - name: Publish package to PyPI
         run: twine upload dist/* 
         env: 
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
-      # Build and deploy mkdocs to GitHub Pages
-      - name: Build and deploy mkdocs
+      # Buil mkdocs
+      - name: Build mkdocs
         run: |
           mkdocs build
+          
+      # Build and deploy mkdocs to GitHub Pages
+      - name: Deploy mkdocs
+        run: |
           mkdocs gh-deploy --force
