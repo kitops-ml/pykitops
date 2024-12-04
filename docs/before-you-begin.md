@@ -13,6 +13,7 @@ To determine if the Kit CLI is installed in your environment:
    ```bash
    kit version
    ```
+   
 1. You should see output similar to the following:
 
     ```
@@ -42,20 +43,16 @@ Alternatively, ModelKits can be stored in any OCI 1.1-compliant container regist
 
    An example `.env` file for Jozu Hub will look like this:
    
-        ```
         JOZU_USERNAME=brett@jozu.org
         JOZU_PASSWORD=my_password
         JOZU_NAMESPACE=brett
-        ```
 
     An example `.env` file for another registry will look like this:
         
-        ```
         JOZU_REGISTRY=hub.docker.com
         JOZU_USERNAME=brett@jozu.org
         JOZU_PASSWORD=my_password
         JOZU_NAMESPACE=brett
-        ```
 
     - The Kitops Manager uses the entries in the `.env` file to login to [Jozu.ml](https://www.jozu.ml).
     - As an alternative to using a `.env` file, you can create Environment Variables for each of the entries above.
