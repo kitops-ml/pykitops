@@ -1,6 +1,6 @@
 # Code of Conduct
 
-PyKitOps is a sub-project of the KitOps open source project and is governed by the same [KitOps Code of Conduct](https://github.com/jozu-ai/kitops/blob/main/CODE-OF-CONDUCT.md).
+The PyKitOps project is related to the KitOps project and is governed by the [KitOps Code of Conduct](https://github.com/jozu-ai/kitops/blob/main/CODE-OF-CONDUCT.md).
 
 ## Reporting
 
