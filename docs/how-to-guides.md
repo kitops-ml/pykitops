@@ -1,7 +1,4 @@
-This part of the project documentation focuses on a
-**problem-oriented** approach. You'll tackle common
-tasks that you might have, with the help of the code
-provided in this project.
+This part of the project documentation focuses on a **problem-oriented** approach. You'll tackle common tasks that you might have, with the help of the code provided in this project.
 
 ## How To Create A Kitfile Object?
 
@@ -11,6 +8,7 @@ get this done.
 
 Install the `kitops` package from PYPI into your project's environment 
 with the following command
+
 ```
 pip install kitops
 ```
