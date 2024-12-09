@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
     paths:
-      - "docs/"
+      - "docs/**"
 
 env:
   KITOPS_PATH: "kitops-clone"
