@@ -22,7 +22,7 @@ jobs:
       - name: Checkout KitOps repository to subdirectory
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29   ## v4.1.6
         with:
-          token: ${{ secrets.KITOPS_PAT }}
+          token: ${{ secrets.GITOPS_PAT }}
           repository: jozu-ai/kitops
           ref: main
           path: ${{ env.KITOPS_PATH }}
@@ -44,7 +44,7 @@ jobs:
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f   ## v7.0.5
         with:
           path: ${{ env.KITOPS_PATH }}
-          token: ${{ secrets.KITOPS_PAT }}
+          token: ${{ secrets.GITOPS_PAT }}
           commit-message: |
             Update pykitops documentation
 
