@@ -38,6 +38,7 @@ setup(
     url='https://github.com/jozu-ai/pykitops',
     license='Apache-2.0 License',
     python_requires='>=3.10.0',
+    package_data={'kitops': ['py.typed']},
     packages=['kitops'],
     keywords=['kitfile', 'modelkit', 'kitops', 'jozu', 'jozu.ml'],
     install_requires=requirements.pop('base'),
