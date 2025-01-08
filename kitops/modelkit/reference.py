@@ -26,7 +26,7 @@ class ModelKitReference:
         tag:
             Gets or sets the tag.
     """
-    def __init__(self, modelkit_tag: Optional[str]):
+    def __init__(self, modelkit_tag: Optional[str] = None):
         """
         Initializes the ModelKitReference instance by parsing a tag.
         
