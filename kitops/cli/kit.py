@@ -9,8 +9,8 @@ from .utils import _process_command_flags
 def info(repo_path_with_tag: str, 
          filters: Optional[List[str]] = None, **kwargs) -> Dict[str, Any]:
     """
-    Retrieve information about a kit repository, displaying the contents in the console,
-    while returning the contents as a YAML object.
+    Retrieve information about a ModelKit, displaying the contents in the console,
+    while returning the contents as a string-keyed dictionary.
 
     Args:
         repo_path_with_tag (str): The path to the repository along with the tag.
@@ -19,16 +19,17 @@ def info(repo_path_with_tag: str,
         **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
-        
+        The output of the 'kit info' command as a dictionary.       
     Raises:
         subprocess.CalledProcessError: If the command returns a non-zero exit status,
         The exception contains the return code and the standard error output.
     
     Examples:
-        >>> info("jozu.ml/brett/titanic-survivability:latest")
+        >>> kit_info = info("jozu.ml/brett/titanic-survivability:latest")
         # Returns information from the local registry about the 
         # "titanic-survivability:latest" ModelKit.
+        >>> print(kit_info["manifestVersion"])
+        1.0
     """
     command = ["kit", "info",  
                repo_path_with_tag]
@@ -46,8 +47,8 @@ def info(repo_path_with_tag: str,
 
 def inspect(repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs) -> Dict[str, Any]:
     """
-    Inspect a repository using the 'kit' command, displaying the contents to the console,
-    and returning the content as a JSON object.
+    Inspect a ModelKit, displaying the contents in the console, while returning
+    the contents as a string-keyed dictionary.
 
     Parameters:
     repo_path_with_tag (str): The path to the repository along with the tag.
@@ -56,7 +57,7 @@ def inspect(repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs) ->
     **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
+        The output of the 'kit inspect' command as a dictionary.
         
     Raises:
         subprocess.CalledProcessError: If the command returns a non-zero exit status,
@@ -83,7 +84,7 @@ def list(repo_path_without_tag: Optional[str] = None, **kwargs) -> str:
         **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
+        The list of available ModelKits as a string.
         
     Raises:
         subprocess.CalledProcessError: If the command returns a non-zero exit status,
@@ -306,7 +307,7 @@ def version(**kwargs) -> str:
         **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
+        The KitOps CLI version as a string.
     
     Raises:
         subprocess.CalledProcessError: If the command returns a non-zero exit status. 
