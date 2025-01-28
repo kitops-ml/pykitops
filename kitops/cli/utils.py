@@ -1,3 +1,21 @@
+'''
+Copyright 2024 The KitOps Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+'''
+
 from typing import List, Optional
 
 def _process_flag(full_key_name: str, abbr_key_name: Optional[str] = None,
@@ -243,6 +261,20 @@ def _get_tls_verify_flag(**kwargs) -> List[str]:
     """
     return _process_flag(full_key_name="tls-verify", **kwargs)
 
+def _get_token_flag(**kwargs) -> List[str]:
+    """
+    Processes the token flag for the KitOps CLI command, if provided.
+
+    Args:
+        **kwargs: The arguments from which to extract the token flag to be 
+        processed, if provided.
+
+    Returns:
+        List[str]: The processed token flag, if provided; otherwise, an empty list.
+    """
+    return _process_flag(full_key_name="token",  
+                         has_value_part=True, **kwargs)
+
 def _process_global_flags(**kwargs) -> List[str]:
     """
     Processes the global flags for the KitOps CLI.
@@ -285,6 +317,13 @@ def _process_command_flags(kit_cmd_name: str, **kwargs) -> List[str]:
         flags.extend(_get_concurrency_flag(**kwargs))
         flags.extend(_get_proxy_flag(**kwargs))
 
+    if kit_cmd_name in ["import"]:
+        flags.extend(_get_tag_flag(**kwargs))
+        flags.extend(_get_token_flag(**kwargs))
+    
+    if kit_cmd_name in ["init"]:
+        flags.extend(_get_force_flag(**kwargs))
+        
     if kit_cmd_name in ["pack"]:
         flags.extend(_get_file_flag(**kwargs))
         flags.extend(_get_compression_flag(**kwargs))

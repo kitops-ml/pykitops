@@ -1,10 +1,57 @@
+'''
+Copyright 2024 The KitOps Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+'''
+
 import json
+import os
 import subprocess
 import yaml
 from typing import Any, Dict, List, Optional
+from ..modelkit.kitfile import Kitfile
 from ..modelkit.utils import Color, IS_A_TTY
 from .utils import _process_command_flags
 
+def import_from_hf(repo_path_without_tag: str, **kwargs) -> None:
+    """
+    Import a model from HuggingFace. Download a repository from HuggingFace and 
+    package it as a ModelKit.
+    
+    The repository can be specified either via a repository (e.g. myorg/myrepo) or
+    with a full URL (https://huggingface.co/myorg/myrepo). The repository will be
+    downloaded to a temporary directory and be packaged using a generated Kitfile.
+    
+    Note: importing repositories requires 'git' and 'git-lfs' to be installed.
+
+    Args:
+        repo_path_with_tag (str): The repository path along with the tag to be used for the package.
+        **kwargs: Additional arguments to pass to the command.
+
+    Returns:
+        None
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
+    """
+    command = ["kit", "import", repo_path_without_tag]
+
+    command.extend(_process_command_flags(kit_cmd_name="import", **kwargs))
+    result = _run(command=command, input="n\n")
+    print(result.stdout)
 
 def info(repo_path_with_tag: str, 
          filters: Optional[List[str]] = None, **kwargs) -> Dict[str, Any]:
@@ -44,6 +91,39 @@ def info(repo_path_with_tag: str,
     print(kit_info)
     kit_info = yaml.safe_load(result.stdout.strip())
     return kit_info
+
+def init(directory: str, name: str, description: str = " ", 
+         author: str = " ", **kwargs) -> Kitfile:
+    """
+    Generates a Kitfile for the contents of a given directory.
+
+    Examines the contents of a directory and attempt to generate a basic Kitfile
+    based on common file formats. Any files whose type (i.e. model, dataset, etc.)
+    cannot be determined will be included in a code layer.
+
+    Args:
+        dir (str): The directory to examine, and in which the ModelKit should
+        be created.
+        name (str): The name of the ModelKit.
+        description (str): A description of the ModelKit. Defaults to " ".
+        author (str): The author of the ModelKit. Defaults to " ".
+        **kwargs: Additional arguments to pass to the command.
+
+    Returns:
+        Kitfile: The generated Kitfile as an object. 
+
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
+    """
+    command = ["kit", "init", directory, 
+               "--name", name, "--desc", description, "--author", author]
+
+    command.extend(_process_command_flags(kit_cmd_name="init", **kwargs))
+    result = _run(command=command)
+    print(result.stdout)
+    kitfile = Kitfile(os.path.join(directory, "Kitfile"))
+    return kitfile
 
 def inspect(repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs) -> Dict[str, Any]:
     """
@@ -148,7 +228,7 @@ def logout(registry: Optional[str] = "jozu.ml", **kwargs) -> None:
     result = _run(command=command)
     print(result.stdout)
 
-def pack(repo_path_with_tag: str, **kwargs)-> None:
+def pack(repo_path_with_tag: str, **kwargs) -> None:
     """
     Packs the current directory into a ModelKit package with a specified tag.
 
