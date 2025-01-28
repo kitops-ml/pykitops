@@ -1,13 +1,63 @@
+'''
+Copyright 2024 The KitOps Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+'''
+
+import json
+import os
 import subprocess
-from typing import Any, List, Optional
+import yaml
+from typing import Any, Dict, List, Optional
+from ..modelkit.kitfile import Kitfile
 from ..modelkit.utils import Color, IS_A_TTY
 from .utils import _process_command_flags
 
+def import_from_hf(repo_path_without_tag: str, **kwargs) -> None:
+    """
+    Import a model from HuggingFace. Download a repository from HuggingFace and 
+    package it as a ModelKit.
+    
+    The repository can be specified either via a repository (e.g. myorg/myrepo) or
+    with a full URL (https://huggingface.co/myorg/myrepo). The repository will be
+    downloaded to a temporary directory and be packaged using a generated Kitfile.
+    
+    Note: importing repositories requires 'git' and 'git-lfs' to be installed.
+
+    Args:
+        repo_path_with_tag (str): The repository path along with the tag to be used for the package.
+        **kwargs: Additional arguments to pass to the command.
+
+    Returns:
+        None
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
+    """
+    command = ["kit", "import", repo_path_without_tag]
+
+    command.extend(_process_command_flags(kit_cmd_name="import", **kwargs))
+    result = _run(command=command, input="n\n")
+    print(result.stdout)
 
 def info(repo_path_with_tag: str, 
-         filters: Optional[List[str]] = None, **kwargs) -> None:
+         filters: Optional[List[str]] = None, **kwargs) -> Dict[str, Any]:
     """
-    Retrieve information about a kit repository.
+    Retrieve information about a ModelKit, displaying the contents in the console,
+    while returning the contents as a string-keyed dictionary.
 
     Args:
         repo_path_with_tag (str): The path to the repository along with the tag.
@@ -16,13 +66,17 @@ def info(repo_path_with_tag: str,
         **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
-
+        The output of the 'kit info' command as a dictionary.       
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     
     Examples:
-        >>> info("jozu.ml/brett/titanic-survivability:latest")
+        >>> kit_info = info("jozu.ml/brett/titanic-survivability:latest")
         # Returns information from the local registry about the 
         # "titanic-survivability:latest" ModelKit.
+        >>> print(kit_info["manifestVersion"])
+        1.0
     """
     command = ["kit", "info",  
                repo_path_with_tag]
@@ -32,11 +86,49 @@ def info(repo_path_with_tag: str,
             command.append(filter)
  
     command.extend(_process_command_flags(kit_cmd_name="info", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    kit_info = result.stdout.strip()
+    print(kit_info)
+    kit_info = yaml.safe_load(result.stdout.strip())
+    return kit_info
 
-def inspect(repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs) -> None:
+def init(directory: str, name: str, description: str = " ", 
+         author: str = " ", **kwargs) -> Kitfile:
     """
-    Inspect a repository using the 'kit' command.
+    Generates a Kitfile for the contents of a given directory.
+
+    Examines the contents of a directory and attempt to generate a basic Kitfile
+    based on common file formats. Any files whose type (i.e. model, dataset, etc.)
+    cannot be determined will be included in a code layer.
+
+    Args:
+        dir (str): The directory to examine, and in which the ModelKit should
+        be created.
+        name (str): The name of the ModelKit.
+        description (str): A description of the ModelKit. Defaults to " ".
+        author (str): The author of the ModelKit. Defaults to " ".
+        **kwargs: Additional arguments to pass to the command.
+
+    Returns:
+        Kitfile: The generated Kitfile as an object. 
+
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
+    """
+    command = ["kit", "init", directory, 
+               "--name", name, "--desc", description, "--author", author]
+
+    command.extend(_process_command_flags(kit_cmd_name="init", **kwargs))
+    result = _run(command=command)
+    print(result.stdout)
+    kitfile = Kitfile(os.path.join(directory, "Kitfile"))
+    return kitfile
+
+def inspect(repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs) -> Dict[str, Any]:
+    """
+    Inspect a ModelKit, displaying the contents in the console, while returning
+    the contents as a string-keyed dictionary.
 
     Parameters:
     repo_path_with_tag (str): The path to the repository along with the tag.
@@ -45,17 +137,26 @@ def inspect(repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs) ->
     **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
+        The output of the 'kit inspect' command as a dictionary.
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "inspect", 
                 repo_path_with_tag]
 
     command.extend(_process_command_flags(kit_cmd_name="inspect", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    kit_inspect = result.stdout.strip()
+    print(kit_inspect)
+    kit_inspect = json.loads(result.stdout.strip())
+    return(kit_inspect)
 
-def list(repo_path_without_tag: Optional[str] = None, **kwargs) -> None:
+def list(repo_path_without_tag: Optional[str] = None, **kwargs) -> str:
     """
-    Lists the ModelKits available in the specified repository path.
+    Lists the ModelKits available in the specified repository path to the console,
+    and returns the values as a string.
 
     Args:
         repo_path_without_tag (Optional[str]): The path to the repository without the tag. 
@@ -63,14 +164,21 @@ def list(repo_path_without_tag: Optional[str] = None, **kwargs) -> None:
         **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
+        The list of available ModelKits as a string.
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "list"]
     if repo_path_without_tag:
         command.append(repo_path_without_tag)
 
     command.extend(_process_command_flags(kit_cmd_name="list", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    kit_list = result.stdout.strip()
+    print(kit_list)
+    return(kit_list)
 
 def login(user: str, passwd: str, registry: Optional[str] = "jozu.ml", **kwargs) -> None:
     """
@@ -84,6 +192,10 @@ def login(user: str, passwd: str, registry: Optional[str] = "jozu.ml", **kwargs)
 
     Returns:
         None
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = [
         "kit", "login", registry,
@@ -92,7 +204,8 @@ def login(user: str, passwd: str, registry: Optional[str] = "jozu.ml", **kwargs)
     ]
 
     command.extend(_process_command_flags(kit_cmd_name="login", **kwargs))
-    _run(command=command, input=passwd)
+    result = _run(command=command, input=passwd)
+    print(result.stdout)
 
 def logout(registry: Optional[str] = "jozu.ml", **kwargs) -> None:
     """
@@ -104,13 +217,18 @@ def logout(registry: Optional[str] = "jozu.ml", **kwargs) -> None:
 
     Returns:
         None
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "logout", registry]
 
     command.extend(_process_command_flags(kit_cmd_name="logout", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    print(result.stdout)
 
-def pack(repo_path_with_tag: str, **kwargs)-> None:
+def pack(repo_path_with_tag: str, **kwargs) -> None:
     """
     Packs the current directory into a ModelKit package with a specified tag.
 
@@ -120,12 +238,17 @@ def pack(repo_path_with_tag: str, **kwargs)-> None:
 
     Returns:
         None
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "pack", ".", 
                "--tag", repo_path_with_tag]
 
     command.extend(_process_command_flags(kit_cmd_name="pack", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    print(result.stdout)
 
 def pull(repo_path_with_tag: str, **kwargs) -> None:
     """
@@ -137,12 +260,17 @@ def pull(repo_path_with_tag: str, **kwargs) -> None:
 
     Returns:
         None
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "pull", 
                repo_path_with_tag]
 
     command.extend(_process_command_flags(kit_cmd_name="pull", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    print(result.stdout)
 
 def push(repo_path_with_tag: str, **kwargs) -> None:
     """
@@ -154,12 +282,17 @@ def push(repo_path_with_tag: str, **kwargs) -> None:
 
     Returns:
         None
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "push", 
                repo_path_with_tag]
 
     command.extend(_process_command_flags(kit_cmd_name="push", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    print(result.stdout)
 
 def remove(repo_path_with_tag: str, **kwargs) -> None:
     """
@@ -171,17 +304,18 @@ def remove(repo_path_with_tag: str, **kwargs) -> None:
 
     Returns:
         None
+    
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status,
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "remove",  
                repo_path_with_tag]
 
     command.extend(_process_command_flags(kit_cmd_name="remove", **kwargs))
-
-    try:
-        _run(command=command)
-    except subprocess.CalledProcessError as e:
-        # If the repository is not found in the registry, ignore the error
-        pass
+    result = _run(command=command)
+    print(result.stdout)
+ 
 
 def tag(repo_path_with_tag: str, repo_path_with_new_tag: str, **kwargs) -> None:
     """
@@ -196,7 +330,8 @@ def tag(repo_path_with_tag: str, repo_path_with_new_tag: str, **kwargs) -> None:
         None
 
     Raises:
-        subprocess.CalledProcessError: If the command returns a non-zero exit status
+        subprocess.CalledProcessError: If the command returns a non-zero exit status. 
+        The exception contains the return code and the standard error output.
 
     Examples:
         >>> tag("jozu.ml/brett/titanic-survivability:latest", 
@@ -207,7 +342,8 @@ def tag(repo_path_with_tag: str, repo_path_with_new_tag: str, **kwargs) -> None:
                repo_path_with_new_tag]
 
     command.extend(_process_command_flags(kit_cmd_name="tag", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    print(result.stdout)
 
 def unpack(repo_path_with_tag: str, dir: str, 
            filters: Optional[List[str]] = None, **kwargs) -> None:
@@ -225,6 +361,10 @@ def unpack(repo_path_with_tag: str, dir: str,
 
     Returns:
         None
+    
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status. 
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "unpack", 
                "--dir", dir, 
@@ -235,26 +375,34 @@ def unpack(repo_path_with_tag: str, dir: str,
             command.append(filter)
 
     command.extend(_process_command_flags(kit_cmd_name="unpack", **kwargs))
-    _run(command=command)
+    result = _run(command=command)
+    print(result.stdout)
 
-def version(**kwargs) -> None:
+def version(**kwargs) -> str:
     """
-    Lists the version of the KitOps Command-line Interface (CLI).
+    Displays the version of the KitOps Command-line Interface (CLI) to the console
+    and returns the value as a string.
 
     Args:
         **kwargs: Additional arguments to pass to the command.
 
     Returns:
-        None
+        The KitOps CLI version as a string.
+    
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit status. 
+        The exception contains the return code and the standard error output.
     """
     command = ["kit", "version"]
 
     command.extend(_process_command_flags(kit_cmd_name="version", **kwargs))
-    _run(command=command)
-
+    result = _run(command=command)
+    version = result.stdout.strip()
+    print(version)
+    return version
 
 def _run(command: List[Any], input: Optional[str] = None, 
-         verbose: bool = True, **kwargs) -> None:
+         verbose: bool = True, **kwargs) -> subprocess.CompletedProcess:
     """
     Executes a command in the system shell.
 
@@ -268,7 +416,8 @@ def _run(command: List[Any], input: Optional[str] = None,
         None
 
     Raises:
-        subprocess.CalledProcessError: If the command returns a non-zero exit status.
+        subprocess.CalledProcessError: If the command returns a non-zero exit status. 
+        The exception contains the return code and the standard error output.
     """
     if verbose:
         output = '% ' + ' '.join(command)
@@ -276,4 +425,8 @@ def _run(command: List[Any], input: Optional[str] = None,
             output = f"{Color.CYAN.value}{output}{Color.RESET.value}"
         print(output, flush=True)
 
-    subprocess.run(command, input=input, text=True, check=True)
+    # Because check=True is used, any non-zero exit status will raise a CalledProcessError.
+    return subprocess.run(
+        command, input=input, text=True, check=True, 
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )

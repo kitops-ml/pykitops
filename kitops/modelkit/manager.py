@@ -1,8 +1,26 @@
+'''
+Copyright 2024 The KitOps Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+'''
+
 import os
 import kitops.cli.kit as kit
 
 from dotenv import load_dotenv
-from typing import Optional
+from typing import Any, Dict, Optional
 from .kitfile import Kitfile
 from .reference import ModelKitReference
 from .user import UserCredentials
@@ -71,6 +89,8 @@ class ModelKitManager:
             # if modelkit_tag is None then an empty ModelkitReference 
             # will be created.
             self.modelkit_reference = ModelKitReference(modelkit_tag)
+
+        self.kitfile = None
 
     @property
     def working_directory(self) -> str:
@@ -152,8 +172,29 @@ class ModelKitManager:
         """
         self._kitfile = value
 
+    def login(self) -> None:
+        """
+        Logs in to the registry using the user credentials.
+        
+        Returns:
+            None
+        """
+        kit.login(user = self.user_credentials.username, 
+                  passwd = self.user_credentials.password,
+                  registry = self.modelkit_reference.registry)
+    
+    def inspect_modelkit(self) -> Dict[str, Any]:
+        """
+        Inspects the ModelKit and returns the inspection results as a dictionary.
+
+        Returns:
+            Dict[str, Any]: The inspection results.
+        """
+        return kit.inspect(self.modelkit_reference.modelkit_tag)
+
     def pull_and_unpack_modelkit(self, load_kitfile: bool = False,
-                                 filters: Optional[list[str]] = None) -> None:
+                                 filters: Optional[list[str]] = None,
+                                 with_login_and_logout: Optional[bool] = True) -> None:
         """
         Unpacks the ModelKit into the working directory.
 
@@ -170,23 +211,26 @@ class ModelKitManager:
         Returns:
             None
         """
-        kit.login(user = self.user_credentials.username, 
-                  passwd = self.user_credentials.password,
-                  registry = self.modelkit_reference.registry)
+        if with_login_and_logout:
+            kit.login(user = self.user_credentials.username, 
+                      passwd = self.user_credentials.password,
+                     registry = self.modelkit_reference.registry)
         
         if not filters:
             # If no filters are provided, go ahead and issue a pull request
             # before unpacking; otherwise, issue the unpack request only.
             kit.pull(self.modelkit_reference.modelkit_tag)
         kit.unpack(self.modelkit_reference.modelkit_tag, 
-                   dir = self.working_directory)
-        kit.logout(registry = self.modelkit_reference.registry)
+                   dir = self.working_directory, filters=filters)
+        if with_login_and_logout:
+            kit.logout(registry = self.modelkit_reference.registry)
 
         if load_kitfile:
             kitfile_path = self.working_directory + "/Kitfile"
             self.kitfile = Kitfile(kitfile_path)
 
-    def pack_and_push_modelkit(self, save_kitfile: bool = False) -> None:
+    def pack_and_push_modelkit(self, save_kitfile: bool = False,
+                               with_login_and_logout: Optional[bool] = True) -> None:
         """
         Packs the ModelKit from the working directory and pushes it 
         to the registry.
@@ -206,18 +250,21 @@ class ModelKitManager:
         if save_kitfile:
             self.kitfile.save()
 
-        kit.login(user = self.user_credentials.username, 
-                  passwd = self.user_credentials.password,
-                  registry = self.modelkit_reference.registry)
+        if with_login_and_logout:
+            kit.login(user = self.user_credentials.username, 
+                      passwd = self.user_credentials.password,
+                      registry = self.modelkit_reference.registry)
         kit.pack(self.modelkit_reference.modelkit_tag)
         kit.push(self.modelkit_reference.modelkit_tag)
-        kit.logout(registry = self.modelkit_reference.registry)
+        if with_login_and_logout:
+            kit.logout(registry = self.modelkit_reference.registry)
 
         # return to the original directory
         os.chdir(current_directory)
 
     def remove_modelkit(self, local: Optional[bool] = False,
-                        remote: Optional[bool] = False) -> None:
+                        remote: Optional[bool] = False,
+                        with_login_and_logout: Optional[bool] = True) -> None:
         """
         Removes the ModelKit from the registry.
 
@@ -236,13 +283,15 @@ class ModelKitManager:
             ...                           modelkit_tag = modelkit_tag)
             >>> manager.remove_modelkit(local = True, remote = True)
         """
-        kit.login(user = self.user_credentials.username, 
-                  passwd = self.user_credentials.password,
-                  registry = self.modelkit_reference.registry)
+        if with_login_and_logout:
+            kit.login(user = self.user_credentials.username, 
+                      passwd = self.user_credentials.password,
+                      registry = self.modelkit_reference.registry)
         if local:
             kit.remove(self.modelkit_reference.modelkit_tag, remote = False)
 
         if remote:
             kit.remove(self.modelkit_reference.modelkit_tag, remote = True)
 
-        kit.logout(registry = self.modelkit_reference.registry)
+        if with_login_and_logout:
+            kit.logout(registry = self.modelkit_reference.registry)
