@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 """
 Manage KitOps' ModelKits
 """
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 __all__ = [
      'kitfile',
      'reference',
