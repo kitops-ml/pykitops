@@ -16,9 +16,10 @@ jobs:
         with:
           python-version: "3.13"
           cache: poetry
+      
       - name: Install dependencies
         run: |
-          poetry install --dev
+          poetry install --with=dev --without=docs
   
       - name: Run Tests
         run: poetry run pytest
