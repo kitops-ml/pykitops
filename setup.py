@@ -19,11 +19,6 @@ with io.open('kitops/__init__.py', 'rt', encoding='utf8') as f:
     if version is not None:
         version_str: str | Any = version.group(1)
 
-requirements: dict[str, list | None] = {'base': None, 'development': None}
-for k in requirements:
-    with open("requirements/{}.in".format(k)) as f:
-        requirements[k] = list(filter(lambda x: bool(x.strip()) and not x.strip().startswith('-r '), f.read().splitlines()))
-
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
@@ -41,8 +36,6 @@ setup(
     package_data={'kitops': ['py.typed']},
     packages=['kitops'],
     keywords=['kitfile', 'modelkit', 'kitops', 'jozu', 'jozu.ml'],
-    install_requires=requirements.pop('base'),
-    extras_require=requirements,
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3 :: Only',

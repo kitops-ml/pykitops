@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 '''
 
-from typing import Any, List, Set
+from typing import Any, Set
 from .dict_validator import DictValidator
 from .string_validator import StringValidator
 

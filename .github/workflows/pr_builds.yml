@@ -1,0 +1,24 @@
+name: PR Builds
+
+on:
+  pull_request:
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+          cache: poetry
+      - name: Install dependencies
+        run: |
+          poetry install --dev
+  
+      - name: Run Tests
+        run: poetry run pytest
