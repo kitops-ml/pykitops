@@ -1,6 +1,6 @@
 [build-system]
-requires = ["hatchling", "hatch", "PyYAML"]
-build-backend = "hatchling.build"
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "kitops"
@@ -8,15 +8,33 @@ version = "1.1.1"
 authors = [
   { name="Brett Hodges", email="brett@jozu.com" },
 ]
-description = "A package for working with KitOps' ModelKits"
-readme = "README.md"
+description = "A package for managing KitOps ModelKits and Kitfiles"
+readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.10"
+license = "Apache-2.0"
+keywords = ["kitfile", "modelkit", "kitops", "jozu", "jozu.ml"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
 ]
 
 [project.urls]
 Homepage = "https://github.com/jozu-ai/pykitops"
 Issues = "https://github.com/jozu-ai/pykitops/issues"
+Repository = "https://github.com/jozu-ai/pykitops"
+Documentation = "https://kitops.org/docs/pykitops/reference/"
+
+[tool.poetry.dependencies]
+python-dotenv = "^1.0.1"
+pyyaml = "^6.0.2"
+types-pyyaml = "^6.0.12.20241230"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+
+[tool.poetry.group.docs.dependencies]
+mkdocs-material = "^9.6.3"
+mkdocstrings = "^0.28.0"
+mkdocs = "^1.6.1"

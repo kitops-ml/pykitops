@@ -1,8 +1,0 @@
-python-dotenv
-PyYAML
-types-PyYAML
-mkdocs
-"mkdocstrings[python]"
-mkdocs-material
-pytest
-py

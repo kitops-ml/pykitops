@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import os
 import kitops.cli.kit as kit
 
-from dotenv import load_dotenv
 from typing import Any, Dict, Optional
 from .kitfile import Kitfile
 from .reference import ModelKitReference

@@ -1,10 +1,10 @@
 import os
 import pytest
-import unittest
+from unittest import TestCase
 from unittest.mock import patch
-from kitops.modelkit.utils import load_environment_variables
+from kitops.modelkit.utils import load_environment_variables, clean_empty_items, validate_dict
 
-class TestLoadEnvironmentVariables(unittest.TestCase):
+class TestLoadEnvironmentVariables(TestCase):
 
     @patch.dict(os.environ, {
         "JOZU_USERNAME": "test_user",
@@ -14,7 +14,7 @@ class TestLoadEnvironmentVariables(unittest.TestCase):
     })
     def test_load_environment_variables_success(self):
         expected = {
-            "user": "test_user",
+            "username": "test_user",
             "password": "test_password",
             "registry": "test_registry",
             "namespace": "test_namespace"
@@ -28,7 +28,7 @@ class TestLoadEnvironmentVariables(unittest.TestCase):
     })
     def test_load_environment_variables_missing_optional(self):
         expected = {
-            "user": "test_user",
+            "username": "test_user",
             "password": "test_password",
             "registry": None,
             "namespace": None
@@ -93,7 +93,3 @@ def test_validate_dict(
 )
 def test_clean_empty_items(d, expected) -> None:
     assert clean_empty_items(d) == expected
-
-
-if __name__ == "__main__":
-    unittest.main()
