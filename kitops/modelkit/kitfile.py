@@ -17,18 +17,20 @@
 """
 Define the Kitfile class to manage KitOps ModelKits and Kitfiles.
 """
+
 import copy
-import yaml
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .utils import clean_empty_items, validate_dict, Color, IS_A_TTY
+import yaml
+
+from .utils import IS_A_TTY, Color, clean_empty_items, validate_dict
 from .validators.code_validator import CodeValidator
 from .validators.datasets_validator import DatasetsValidator
 from .validators.docs_validator import DocsValidator
 from .validators.manifest_version_validator import ManifestVersionValidator
-from .validators.package_validator import PackageValidator
 from .validators.model_validator import ModelValidator
+from .validators.package_validator import PackageValidator
 
 
 class Kitfile:
@@ -41,7 +43,7 @@ class Kitfile:
 
     def __init__(self, path: str | None = None):
         """
-        Initialize the Kitfile from a path to an existing Kitfile, or 
+        Initialize the Kitfile from a path to an existing Kitfile, or
         create an empty Kitfile.
 
         Examples:
@@ -100,22 +102,34 @@ class Kitfile:
             Kitfile (Kitfile): Kitfile object.
         """
         self._data: Dict = {}
-        self._kitfile_allowed_keys = {'manifestVersion', 'package', 
-                                     'code', 'datasets', 'docs', 'model'}
-        
+        self._kitfile_allowed_keys = {
+            "manifestVersion",
+            "package",
+            "code",
+            "datasets",
+            "docs",
+            "model",
+        }
+
         # initialize the kitfile section validators
         self._initialize_kitfile_section_validators()
 
         # initialize an empty kitfile object
         self.manifestVersion = ""
-        self.package = {"name": "", "version": "", "description": "", 
-                        "authors": []}
+        self.package = {"name": "", "version": "", "description": "", "authors": []}
         self.code = []
         self.datasets = []
         self.docs = []
-        self.model = {"name": "", "path": "", "description": "", 
-                      "framework": "", "license": "", "version": "", 
-                      "parts": [], "parameters": ""}
+        self.model = {
+            "name": "",
+            "path": "",
+            "description": "",
+            "framework": "",
+            "license": "",
+            "version": "",
+            "parts": [],
+            "parameters": "",
+        }
 
         if path:
             self.load(path)
@@ -125,29 +139,34 @@ class Kitfile:
         Initialize validators for Kitfile sections.
         """
         self._manifestVersion_validator = ManifestVersionValidator(
-                                            section='manifestVersion',
-                                            allowed_keys=set())
+            section="manifestVersion", allowed_keys=set()
+        )
         self._package_validator = PackageValidator(
-                                    section='package',
-                                    allowed_keys={"name", "version", 
-                                                  "description", "authors"})
+            section="package",
+            allowed_keys={"name", "version", "description", "authors"},
+        )
         self._code_validator = CodeValidator(
-                                    section='code',
-                                    allowed_keys={"path", "description", 
-                                                  "license"})
+            section="code", allowed_keys={"path", "description", "license"}
+        )
         self._datasets_validator = DatasetsValidator(
-                                    section='datasets',
-                                    allowed_keys={"name", "path", 
-                                                  "description", "license"})
+            section="datasets", allowed_keys={"name", "path", "description", "license"}
+        )
         self._docs_validator = DocsValidator(
-                                    section='docs',
-                                    allowed_keys={"path", "description"})
+            section="docs", allowed_keys={"path", "description"}
+        )
         self._model_validator = ModelValidator(
-                                    section='model',
-                                    allowed_keys={"name", "path", "framework",
-                                                  "version", "description", 
-                                                  "license", "parts", 
-                                                  "parameters"})
+            section="model",
+            allowed_keys={
+                "name",
+                "path",
+                "framework",
+                "version",
+                "description",
+                "license",
+                "parts",
+                "parameters",
+            },
+        )
 
     def _validate_and_set_attributes(self, data: Dict[str, Any]):
         """
@@ -158,7 +177,7 @@ class Kitfile:
         """
         for key, value in data.items():
             self.__setattr__(key, value)
-        
+
     def load(self, path):
         """
         Load Kitfile data from a yaml-formatted file and set the
@@ -170,30 +189,30 @@ class Kitfile:
         kitfile_path = Path(path)
         if not kitfile_path.exists():
             raise ValueError(f"Path '{kitfile_path}' does not exist.")
-        
+
         # try to load the kitfile
         try:
-            with open(kitfile_path, 'r') as kitfile:
-            # Load the yaml data
+            with open(kitfile_path, "r") as kitfile:
+                # Load the yaml data
                 data = yaml.safe_load(kitfile)
         except yaml.YAMLError as e:
-            if hasattr(e, 'problem_mark'):
+            if hasattr(e, "problem_mark"):
                 mark = e.problem_mark
                 raise yaml.YAMLError(
-                            "Error parsing Kitfile at " +
-                            f"line{mark.line+1}, " +
-                            f"column:{mark.column+1}.") from e
+                    "Error parsing Kitfile at "
+                    + f"line{mark.line + 1}, "
+                    + f"column:{mark.column + 1}."
+                ) from e
             else:
                 raise
 
         try:
-            validate_dict(value=data, 
-                          allowed_keys=self._kitfile_allowed_keys)
+            validate_dict(value=data, allowed_keys=self._kitfile_allowed_keys)
         except ValueError as e:
             raise ValueError(
-                    "Kitfile must be a dictionary with allowed " +
-                     f"keys: {', '.join(self._kitfile_allowed_keys)}"
-                    ) from e
+                "Kitfile must be a dictionary with allowed "
+                + f"keys: {', '.join(self._kitfile_allowed_keys)}"
+            ) from e
         # kitfile has been successfully loaded into data
         self._validate_and_set_attributes(data)
 
@@ -322,13 +341,13 @@ class Kitfile:
         """
         self._model_validator.validate(data=value)
         self._data["model"] = value
-        
+
     def to_yaml(self, suppress_empty_values: bool = True) -> str:
         """
-        Serialize the Kitfile to YAML format. 
+        Serialize the Kitfile to YAML format.
 
         Args:
-            suppress_empty_values (bool, optional): Whether to suppress 
+            suppress_empty_values (bool, optional): Whether to suppress
                 empty values. Defaults to True.
         Returns:
             str: YAML representation of the Kitfile.
@@ -338,8 +357,9 @@ class Kitfile:
             dict_to_print = copy.deepcopy(self._data)
             dict_to_print = clean_empty_items(dict_to_print)
 
-        return yaml.safe_dump(data = dict_to_print, sort_keys=False,
-                         default_flow_style=False)
+        return yaml.safe_dump(
+            data=dict_to_print, sort_keys=False, default_flow_style=False
+        )
 
     def print(self) -> None:
         """
@@ -348,8 +368,8 @@ class Kitfile:
         Returns:
             None
         """
-        print('\n\nKitfile Contents...')
-        print('===================\n')
+        print("\n\nKitfile Contents...")
+        print("===================\n")
         output = self.to_yaml()
         if IS_A_TTY:
             output = f"{Color.GREEN.value}{output}{Color.RESET.value}"
@@ -361,7 +381,7 @@ class Kitfile:
 
         Args:
             path (str): Path to save the Kitfile. Defaults to "Kitfile".
-            print (bool): If True, print the Kitfile to the console. 
+            print (bool): If True, print the Kitfile to the console.
                 Defaults to True.
 
         Returns:
@@ -371,7 +391,7 @@ class Kitfile:
             >>> kitfile = Kitfile()
             >>> kitfile.save("path/to/Kitfile")
         """
-        with open(path, 'w') as file:
+        with open(path, "w") as file:
             file.write(self.to_yaml())
 
         if print:

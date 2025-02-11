@@ -1,4 +1,4 @@
-'''
+"""
 Copyright 2024 The KitOps Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-'''
+"""
+
 import enum
 import os
 import sys
-from dotenv import load_dotenv
 from pathlib import Path
 from typing import Any, Dict, Set
+
+from dotenv import load_dotenv
+
 
 class Color(enum.Enum):
     RED = "\033[91m"
@@ -31,7 +34,9 @@ class Color(enum.Enum):
     CYAN = "\033[96m"
     RESET = "\033[0m"
 
+
 IS_A_TTY = sys.stdout.isatty()
+
 
 def validate_dict(value: Dict[str, Any], allowed_keys: Set[str]):
     """
@@ -52,12 +57,11 @@ def validate_dict(value: Dict[str, Any], allowed_keys: Set[str]):
         allowed_keys (Set[str]): Set of allowed keys.
     """
     if not isinstance(value, dict):
-        raise ValueError(
-                f"Expected a dictionary but got {type(value).__name__}")
+        raise ValueError(f"Expected a dictionary but got {type(value).__name__}")
     unallowed_keys = set(value.keys()) - allowed_keys
     if len(unallowed_keys) > 0:
-        raise ValueError("Found unallowed key(s): " +
-                         f"{', '.join(unallowed_keys)}")
+        raise ValueError("Found unallowed key(s): " + f"{', '.join(unallowed_keys)}")
+
 
 def clean_empty_items(d: Any) -> Any:
     """
@@ -69,7 +73,7 @@ def clean_empty_items(d: Any) -> Any:
 
         >>> clean_empty_items(["", "a", None])
         ['a']
-    
+
     Args:
         d (Any): Dictionary or list to clean.
 
@@ -89,6 +93,7 @@ def clean_empty_items(d: Any) -> Any:
     if d:
         return d
 
+
 def get_or_create_directory(directory: str) -> str:
     """
     Get or create a directory.
@@ -106,6 +111,7 @@ def get_or_create_directory(directory: str) -> str:
     path = Path(directory)
     path.mkdir(parents=True, exist_ok=True)
     return path.as_posix()
+
 
 def parse_modelkit_tag(tag: str) -> Dict[str, str]:
     """
@@ -127,30 +133,30 @@ def parse_modelkit_tag(tag: str) -> Dict[str, str]:
         Dict[str, str]: Parsed components of the tag.
     """
     parts = tag.split("/")
-    if len(parts) != 3 or ":" not in parts[2]:
+    if len(parts) != 3 or ":" not in parts[2]: # noqa: PLR2004
         raise ValueError(f"Invalid tag format: {tag}")
     return {
         "registry": parts[0],
         "namespace": parts[1],
         "model": parts[2].split(":")[0],
-        "tag": parts[2].split(":")[1]
+        "tag": parts[2].split(":")[1],
     }
+
 
 def load_environment_variables() -> Dict[str, str | None]:
     load_dotenv(override=True)
     username = os.getenv("JOZU_USERNAME")
     password = os.getenv("JOZU_PASSWORD")
     if not username or not password:
-        raise ValueError("Missing JOZU_USERNAME or JOZU_PASSWORD in " +
-                         "environment variables. Both are required. " +
-                         "Please set these variables in your .env " +
-                         "file and try again.")
+        raise ValueError(
+            "Missing JOZU_USERNAME or JOZU_PASSWORD in "
+            + "environment variables. Both are required. "
+            + "Please set these variables in your .env "
+            + "file and try again."
+        )
     return {
         "username": username,
         "password": password,
         "registry": os.getenv("JOZU_REGISTRY"),
-        "namespace": os.getenv("JOZU_NAMESPACE")
+        "namespace": os.getenv("JOZU_NAMESPACE"),
     }
-
-
-
