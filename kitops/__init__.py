@@ -1,4 +1,4 @@
-'''
+"""
 Copyright 2024 The KitOps Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,16 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-'''
+"""
 
 """
 Manage KitOps' ModelKits
 """
-__version__ = '1.1.1'
-__all__ = [
-     'kitfile',
-     'reference',
-     'user',
-     'manager'
- ]
-
+__version__ = "1.1.1"
+__all__ = ["kitfile", "reference", "user", "manager"]

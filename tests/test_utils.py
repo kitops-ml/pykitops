@@ -1,52 +1,56 @@
 import os
-import pytest
 from unittest import TestCase
 from unittest.mock import patch
-from kitops.modelkit.utils import load_environment_variables, clean_empty_items, validate_dict
+
+import pytest
+
+from kitops.modelkit.utils import (
+    clean_empty_items,
+    load_environment_variables,
+    validate_dict,
+)
+
 
 class TestLoadEnvironmentVariables(TestCase):
-
-    @patch.dict(os.environ, {
-        "JOZU_USERNAME": "test_user",
-        "JOZU_PASSWORD": "test_password",
-        "JOZU_REGISTRY": "test_registry",
-        "JOZU_NAMESPACE": "test_namespace"
-    })
+    @patch.dict(
+        os.environ,
+        {
+            "JOZU_USERNAME": "test_user",
+            "JOZU_PASSWORD": "test_password",
+            "JOZU_REGISTRY": "test_registry",
+            "JOZU_NAMESPACE": "test_namespace",
+        },
+    )
     def test_load_environment_variables_success(self):
         expected = {
             "username": "test_user",
             "password": "test_password",
             "registry": "test_registry",
-            "namespace": "test_namespace"
+            "namespace": "test_namespace",
         }
         result = load_environment_variables()
         self.assertEqual(result, expected)
 
-    @patch.dict(os.environ, {
-        "JOZU_USERNAME": "test_user",
-        "JOZU_PASSWORD": "test_password"
-    })
+    @patch.dict(
+        os.environ, {"JOZU_USERNAME": "test_user", "JOZU_PASSWORD": "test_password"}
+    )
     def test_load_environment_variables_missing_optional(self):
         expected = {
             "username": "test_user",
             "password": "test_password",
             "registry": None,
-            "namespace": None
+            "namespace": None,
         }
         result = load_environment_variables()
         self.assertEqual(result, expected)
 
-    @patch.dict(os.environ, {
-        "JOZU_USERNAME": "test_user"
-    })
+    @patch.dict(os.environ, {"JOZU_USERNAME": "test_user"})
     def test_load_environment_variables_missing_password(self):
         with self.assertRaises(ValueError) as context:
             load_environment_variables()
         self.assertIn("Missing JOZU_USERNAME or JOZU_PASSWORD", str(context.exception))
 
-    @patch.dict(os.environ, {
-        "JOZU_PASSWORD": "test_password"
-    })
+    @patch.dict(os.environ, {"JOZU_PASSWORD": "test_password"})
     def test_load_environment_variables_missing_username(self):
         with self.assertRaises(ValueError) as context:
             load_environment_variables()
@@ -74,6 +78,7 @@ def test_validate_dict(
             validate_dict(input_dict, allowed_keys)
         except ValueError:
             pytest.fail("validate_dict raised ValueError unexpectedly!")
+
 
 @pytest.mark.parametrize(
     "d, expected",

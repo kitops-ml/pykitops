@@ -1,14 +1,14 @@
 # Usage
-from kitops.modelkit.kitfile import Kitfile
 import os
-from pathlib import Path
+
+from kitops.modelkit.kitfile import Kitfile
 
 
 def test_everything(fixtures: dict[str, str]):
     current_directory = os.getcwd()
     print(current_directory)
 
-    path = fixtures['Kitfile_full']
+    path = fixtures["Kitfile_full"]
     kitfile = Kitfile(path=str(path))
 
     print("kitfile.manifestVersion: " + kitfile.manifestVersion)
@@ -20,7 +20,6 @@ def test_everything(fixtures: dict[str, str]):
     yaml_data = kitfile.to_yaml()
     print(yaml_data)
     print("=======================================================")
-
 
     kitfile.manifestVersion = "2.0"
     kitfile.package = {

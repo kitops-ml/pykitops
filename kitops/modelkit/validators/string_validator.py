@@ -1,4 +1,4 @@
-'''
+"""
 Copyright 2024 The KitOps Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-'''
+"""
 
-from typing import Any, Dict, List, Set
+from typing import Any, Set
+
 
 class StringValidator:
-    def __init__(self, section: str, allowed_keys:Set[str]):
+    def __init__(self, section: str, allowed_keys: Set[str]):
         self.section = section
         self.allowed_keys = allowed_keys
 
@@ -42,8 +43,9 @@ class StringValidator:
     def validate(self, data: Any):
         if not isinstance(data, str):
             raise TypeError(
-                f"Problem processing '{self.section}'. " +
-                f"Expected a string but got {type(data).__name__}")
+                f"Problem processing '{self.section}'. "
+                + f"Expected a string but got {type(data).__name__}"
+            )
         # data = data.strip()
         # if not data:
         #     raise ValueError(f"String value must be non-empty.")

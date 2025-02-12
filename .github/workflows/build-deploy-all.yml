@@ -77,6 +77,9 @@ jobs:
       - name: Run Tests
         run: poetry run pytest
 
+      - name: Run Ruff checker
+        run: poetry run ruff check
+
       # Build the package distributables
       - name: Build package 
         run: | 

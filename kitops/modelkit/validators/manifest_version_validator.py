@@ -1,4 +1,4 @@
-'''
+"""
 Copyright 2024 The KitOps Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-'''
+"""
 
 from typing import Any, Set
+
 from .string_validator import StringValidator
 
+
 class ManifestVersionValidator(StringValidator):
-    def __init__(self, section:str, allowed_keys:Set[str]):
+    def __init__(self, section: str, allowed_keys: Set[str]):
         super().__init__(section, allowed_keys)
 
     def validate(self, data: Any):

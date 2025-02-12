@@ -1,4 +1,4 @@
-'''
+"""
 Copyright 2024 The KitOps Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-'''
+"""
 
 from typing import Optional
+
 from .utils import parse_modelkit_tag
+
 
 class ModelKitReference:
     """
     A class to represent a modelkit reference broken down into its parts.
     This class parses a modelkit tag and provides access to its components.
     These include the registry, namespace, model, and tag.
-    
+
     Attributes:
         registry (str): The registry for the model.
         namespace (str): The namespace for the model.
@@ -43,14 +45,15 @@ class ModelKitReference:
         tag:
             Gets or sets the tag.
     """
+
     def __init__(self, modelkit_tag: Optional[str] = None):
         """
         Initializes the ModelKitReference instance by parsing a tag.
-        
+
         Args:
             modelkit_tag (Optional[str]): The tag to parse. It should be in the form of:
                 {registry}/{namespace}/{model}:{tag}
-            
+
         Examples:
             >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
             >>> ref.registry
@@ -68,7 +71,7 @@ class ModelKitReference:
             self.repository = None
             self.tag = None
         else:
-            # try to parse the modelkit tag into its components. 
+            # try to parse the modelkit tag into its components.
             try:
                 parts = parse_modelkit_tag(modelkit_tag)
                 self.registry = parts.get("registry")
@@ -76,9 +79,7 @@ class ModelKitReference:
                 self.repository = parts.get("model")
                 self.tag = parts.get("tag")
             except ValueError as e:
-                raise ValueError(
-                        f"Error parsing modelkit tag: {modelkit_tag}"
-                      ) from e
+                raise ValueError(f"Error parsing modelkit tag: {modelkit_tag}") from e
 
     @property
     def registry(self) -> Optional[str]:
@@ -86,18 +87,18 @@ class ModelKitReference:
         Gets the registry.
         """
         return self._registry
-    
+
     @registry.setter
     def registry(self, value: Optional[str]):
         """
         Sets the registry.
-        
+
         Args:
             value (str): The registry to set.
-        
+
         Raises:
             ValueError: If the registry is not a string or is not None
-        
+
         Examples:
             >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
             >>> ref.registry = "new_registry"
@@ -112,7 +113,7 @@ class ModelKitReference:
     def namespace(self) -> Optional[str]:
         """
         Gets the namespace.
-        
+
         Examples:
             >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
             >>> ref.namespace = "new_namespace"
@@ -120,18 +121,18 @@ class ModelKitReference:
             'new_namespace'
         """
         return self._namespace
-    
+
     @namespace.setter
     def namespace(self, value: Optional[str]):
         """
         Sets the namespace.
-        
+
         Args:
             value (str): The namespace to set.
-            
+
             Raises:
                 ValueError: If the namespace is not a string or is not None.
-                
+
                 Examples:
                 >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
                 >>> ref.namespace = "new_namespace"
@@ -146,26 +147,26 @@ class ModelKitReference:
     def repository(self) -> Optional[str]:
         """
         Gets the repository name.
-        
+
         Examples:
             >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
             >>> ref.repository = "new_model"
             >>> ref.repository
-            'new_repository'    
+            'new_repository'
         """
         return self._repository
-    
+
     @repository.setter
     def repository(self, value: Optional[str]):
         """
         Sets the repository name.
-        
+
         Args:
             value (str): The repository name to set.
-            
+
             Raises:
                 ValueError: If the repository name is not a string or is None.
-                
+
             Examples:
                 >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
                 >>> ref.repository = "new_repository"
@@ -188,18 +189,18 @@ class ModelKitReference:
             'new_tag'
         """
         return self._tag
-    
+
     @tag.setter
     def tag(self, value: Optional[str]):
         """
         Sets the tag.
-        
+
         Args:
             value (str): The tag to set.
-            
+
             Raises:
                 ValueError: If the tag is not a string or None.
-                
+
             Examples:
                 >>> ref = ModelKitReference("jozu.ml/jozu-demos/titanic-survivability:latest")
                 >>> ref.tag = "new_tag"

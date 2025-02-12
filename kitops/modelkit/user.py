@@ -1,4 +1,4 @@
-'''
+"""
 Copyright 2024 The KitOps Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-'''
+"""
 
 from typing import Optional
+
 from .utils import load_environment_variables
+
 
 class UserCredentials:
     """
@@ -45,7 +47,7 @@ class UserCredentials:
         username: Optional[str] = None,
         password: Optional[str] = None,
         registry: Optional[str] = None,
-        namespace: Optional[str] = None
+        namespace: Optional[str] = None,
     ):
         """
         Initializes the UserCredentials instance with the values provided.
@@ -73,12 +75,14 @@ class UserCredentials:
             self.namespace = namespace or vars.get("namespace")
         except ValueError as e:
             if not username or not password:
-                raise ValueError("Username and password must be provided either as arguments or in environment variables.") from e
+                raise ValueError(
+                    "Username and password must be provided either as arguments or in environment variables."
+                ) from e
             self.username = username
             self.password = password
             self.registry = registry
             self.namespace = namespace
-  
+
     @property
     def username(self) -> Optional[str]:
         """
@@ -87,10 +91,10 @@ class UserCredentials:
             Examples:
             >>> user = UserCredentials()
             >>> user.username
-            'user' 
+            'user'
         """
         return self._username
-    
+
     @username.setter
     def username(self, value: Optional[str]):
         """
@@ -99,7 +103,7 @@ class UserCredentials:
             value (str): The username to set.
             Raises:
                 ValueError: If the username is not a string.
-                
+
                 Examples:
                 >>> user = UserCredentials()
                 >>> user.username = 'new_user'
@@ -107,7 +111,9 @@ class UserCredentials:
                 'new_user'
         """
         if value is not None and not isinstance(value, str):
-            raise ValueError(f"Username must be a string or None. Received: {type(value).__name__}")
+            raise ValueError(
+                f"Username must be a string or None. Received: {type(value).__name__}"
+            )
         self._username = value
 
     @property
@@ -122,7 +128,7 @@ class UserCredentials:
             'new_password'
         """
         return self._password
-    
+
     @password.setter
     def password(self, value: Optional[str]):
         """
@@ -139,7 +145,9 @@ class UserCredentials:
                 'new_password'
         """
         if value is not None and not isinstance(value, str):
-            raise ValueError(f"Password must be a string or None. Received: {type(value).__name__}")
+            raise ValueError(
+                f"Password must be a string or None. Received: {type(value).__name__}"
+            )
         self._password = value
 
     @property
@@ -154,12 +162,12 @@ class UserCredentials:
             'new_registry'
         """
         return self._registry
-    
+
     @registry.setter
     def registry(self, value: Optional[str]):
         """
         Sets the registry information.
-        
+
         Args:
             value (str | None): The registry information to set.
             Raises:
@@ -173,7 +181,9 @@ class UserCredentials:
                 'new_registry'
         """
         if value is not None and not isinstance(value, str):
-            raise ValueError(f"Registry must be a string or None. Received: {type(value).__name__}")
+            raise ValueError(
+                f"Registry must be a string or None. Received: {type(value).__name__}"
+            )
         self._registry = value
 
     @property
@@ -188,12 +198,12 @@ class UserCredentials:
             'new_namespace'
         """
         return self._namespace
-    
+
     @namespace.setter
     def namespace(self, value: Optional[str]):
         """
         Sets the namespace information.
-        
+
         Args:
             value (str | None): The namespace information to set.
             Raises:
@@ -206,6 +216,7 @@ class UserCredentials:
                 'new_namespace'
         """
         if value is not None and not isinstance(value, str):
-            raise ValueError(f"Namespace must be a string or None. Received: {type(value).__name__}")
+            raise ValueError(
+                f"Namespace must be a string or None. Received: {type(value).__name__}"
+            )
         self._namespace = value
-    
