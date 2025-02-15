@@ -192,9 +192,8 @@ class Kitfile:
 
         # try to load the kitfile
         try:
-            with open(kitfile_path, "r") as kitfile:
-                # Load the yaml data
-                data = yaml.safe_load(kitfile)
+            data = yaml.safe_load(kitfile_path.read_text("utf-8"))
+
         except yaml.YAMLError as e:
             if hasattr(e, "problem_mark"):
                 mark = e.problem_mark
@@ -391,8 +390,7 @@ class Kitfile:
             >>> kitfile = Kitfile()
             >>> kitfile.save("path/to/Kitfile")
         """
-        with open(path, "w") as file:
-            file.write(self.to_yaml())
+        Path(path).write_text(self.to_yaml(), "utf-8")
 
         if print:
             self.print()
