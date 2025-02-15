@@ -20,7 +20,7 @@ Define the Kitfile class to manage KitOps ModelKits and Kitfiles.
 
 import copy
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set
 
 import yaml
 
@@ -41,12 +41,14 @@ class Kitfile:
         path (str): Path to the Kitfile.
     """
 
-    def __init__(self, path: str | None = None):
+    def __init__(self, path: str | None = None) -> None:
         """
         Initialize the Kitfile from a path to an existing Kitfile, or
         create an empty Kitfile.
 
         Examples:
+            >>> from kitops.modelkit import Kitfile
+            ...
             >>> kitfile = Kitfile(path="path/to/Kitfile")
             >>> kitfile.to_yaml()
 
@@ -102,7 +104,7 @@ class Kitfile:
             Kitfile (Kitfile): Kitfile object.
         """
         self._data: Dict = {}
-        self._kitfile_allowed_keys = {
+        self._kitfile_allowed_keys: Set[str] = {
             "manifestVersion",
             "package",
             "code",
@@ -134,7 +136,7 @@ class Kitfile:
         if path:
             self.load(path)
 
-    def _initialize_kitfile_section_validators(self):
+    def _initialize_kitfile_section_validators(self) -> None:
         """
         Initialize validators for Kitfile sections.
         """
@@ -168,7 +170,7 @@ class Kitfile:
             },
         )
 
-    def _validate_and_set_attributes(self, data: Dict[str, Any]):
+    def _validate_and_set_attributes(self, data: Dict[str, Any]) -> None:
         """
         Validate and set attributes from the provided data.
 
@@ -227,7 +229,7 @@ class Kitfile:
         return self._data["manifestVersion"]
 
     @manifestVersion.setter
-    def manifestVersion(self, value: str):
+    def manifestVersion(self, value: str) -> None:
         """
         Set the manifest version.
 
@@ -248,7 +250,7 @@ class Kitfile:
         return self._data["package"]
 
     @package.setter
-    def package(self, value: Dict[str, Any]):
+    def package(self, value: Dict[str, Any]) -> None:
         """
         Set the package information.
 
@@ -269,7 +271,7 @@ class Kitfile:
         return self._data["code"]
 
     @code.setter
-    def code(self, value: List[Dict[str, Any]]):
+    def code(self, value: List[Dict[str, Any]]) -> None:
         """
         Set the code section.
 
@@ -290,7 +292,7 @@ class Kitfile:
         return self._data["datasets"]
 
     @datasets.setter
-    def datasets(self, value: List[Dict[str, Any]]):
+    def datasets(self, value: List[Dict[str, Any]]) -> None:
         """
         Set the datasets section.
 
@@ -311,7 +313,7 @@ class Kitfile:
         return self._data["docs"]
 
     @docs.setter
-    def docs(self, value: List[Dict[str, Any]]):
+    def docs(self, value: List[Dict[str, Any]]) -> None:
         """
         Set the docs section.
 
@@ -332,7 +334,7 @@ class Kitfile:
         return self._data["model"]
 
     @model.setter
-    def model(self, value: Dict[str, Any]):
+    def model(self, value: Dict[str, Any]) -> None:
         """
         Set the model section.
 
@@ -352,7 +354,7 @@ class Kitfile:
         Returns:
             str: YAML representation of the Kitfile.
         """
-        dict_to_print = self._data
+        dict_to_print: Dict = self._data
         if suppress_empty_values:
             dict_to_print = copy.deepcopy(self._data)
             dict_to_print = clean_empty_items(dict_to_print)
