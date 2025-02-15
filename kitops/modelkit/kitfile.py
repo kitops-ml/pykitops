@@ -192,11 +192,10 @@ class Kitfile:
 
         # try to load the kitfile
         try:
-            data = yaml.safe_load(kitfile_path.read_text("utf-8"))
+            data = yaml.safe_load(kitfile_path.read_text(encoding="utf-8"))
 
         except yaml.YAMLError as e:
-            if hasattr(e, "problem_mark"):
-                mark = e.problem_mark
+            if mark := getattr(e, "problem_mark", None):
                 raise yaml.YAMLError(
                     "Error parsing Kitfile at "
                     + f"line{mark.line + 1}, "
@@ -390,7 +389,7 @@ class Kitfile:
             >>> kitfile = Kitfile()
             >>> kitfile.save("path/to/Kitfile")
         """
-        Path(path).write_text(self.to_yaml(), "utf-8")
+        Path(path).write_text(self.to_yaml(), encoding="utf-8")
 
         if print:
             self.print()
