@@ -259,7 +259,7 @@ class ModelKitManager:
             None
         """
         if save_kitfile:
-            self.kitfile.save()
+            self.kitfile.save(print=False)
 
         if with_login_and_logout:
             kit.login(
