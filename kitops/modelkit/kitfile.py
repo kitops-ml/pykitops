@@ -194,7 +194,7 @@ class Kitfile:
         except yaml.YAMLError as e:
             if mark := getattr(e, "problem_mark", None):
                 raise yaml.YAMLError(
-                    "Error parsing Kitfile at " + f"line{mark.line + 1}, " + f"column:{mark.column + 1}."
+                    f"Error parsing Kitfile at line{mark.line + 1}, column:{mark.column + 1}."
                 ) from e
             else:
                 raise
@@ -203,7 +203,7 @@ class Kitfile:
             validate_dict(value=data, allowed_keys=self._kitfile_allowed_keys)
         except ValueError as e:
             raise ValueError(
-                "Kitfile must be a dictionary with allowed " + f"keys: {', '.join(self._kitfile_allowed_keys)}"
+                f"Kitfile must be a dictionary with allowed keys: {', '.join(self._kitfile_allowed_keys)}"
             ) from e
         # kitfile has been successfully loaded into data
         self._validate_and_set_attributes(data)
