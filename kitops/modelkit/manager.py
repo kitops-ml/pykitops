@@ -258,7 +258,7 @@ class ModelKitManager:
         Returns:
             None
         """
-        if save_kitfile:
+        if save_kitfile and self.kitfile:
             self.kitfile.save(print=False)
 
         if with_login_and_logout:
