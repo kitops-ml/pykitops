@@ -91,14 +91,9 @@ jobs:
         env: 
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-
-      # Build mkdocs
-      - name: Build mkdocs
-        run: |
-          poetry install --with=docs
-          poetry run mkdocs build
-          
-      # Build and deploy mkdocs to GitHub Pages
-      - name: Deploy mkdocs
-        run: |
-          poetry run mkdocs gh-deploy --force
+  
+  # Push docs to the Kitops repo only after a successful release to PyPi
+  release_docs:
+    needs: build-and-publish
+    secrets: inherit
+    uses: ./.github/workflows/sync-docs-to-kitops.yml
