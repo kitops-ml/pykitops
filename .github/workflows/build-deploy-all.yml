@@ -72,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Install dependencies
-        run: poetry install --with=dev --without=docs
+        run: poetry install --with=dev
     
       - name: Run Tests
         run: poetry run pytest
