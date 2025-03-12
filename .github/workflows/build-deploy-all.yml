@@ -49,13 +49,6 @@ jobs:
         run: | 
           git config --global user.email "github-actions[bot]@users.noreply.github.com" 
           git config --global user.name "github-actions[bot]"
-          
-      # Bump version based on input
-      - name: Bump version
-        run: |
-          bump2version ${{ github.event.inputs.version_type }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Install dependencies
         run: poetry install --with=dev
