@@ -52,10 +52,13 @@ manager = ModelKitManager(working_directory=artifact_location, user_credentials=
 manager.login()
 
 # Create a new Kitfile (your ModelKit's "recipe") based on the contents of the working directory
-kit.init(directory=artifact_location, name=name, description="my cool project", author=username)
+kitfile = kit.init(directory=artifact_location, name=name, description="my cool project", author=username)
+
+# Update the Kitfile with parameters from the cur_run
+kitfile.model["parameters"] = cur_run.data.params
 
 # Pack the ModelKit using the Kitfile recipe, and push it to the registry
-manager.pack_and_push_modelkit(with_login_and_logout=False)
+manager.pack_and_push_modelkit(save_kitfile=True, with_login_and_logout=False)
 ```
 
 **Questions or suggestions?** Drop an [issue in our GitHub repository](https://github.com/jozu-ai/kitops/issues) or join [our Discord server](https://discord.gg/Tapeh8agYy) to get support or share your feedback.
