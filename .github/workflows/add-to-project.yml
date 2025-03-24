@@ -14,9 +14,9 @@ jobs:
         id: generate-token
         uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e   ## v1.11.6
         with:
-          app-id: ${{ vars.JOZU_PILOT_ID }}
-          private-key: ${{ secrets.JOZU_PILOT_PRIVATE_KEY}}
-          owner: jozu-ai
+          app-id: ${{ vars.KITOPS_BOT_ID }}
+          private-key: ${{ secrets.KITOPS_BOT_PRIVATE_KEY }}
+          owner: kitops-ml
 
       - name: Add To GitHub projects
         uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e  ## v1.0.2
