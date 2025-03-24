@@ -16,7 +16,4 @@ pip install kitops
 ```
 
 ## Documentation:
-[Python KitOps Docs](https://jozu-ai.github.io/pykitops/)
-
-## Contribute and Star the Project
-[pykitops on GitHub](https://github.com/jozu-ai/pykitops)
+[PyKitOps documentation is part of the KitOps Docs](https://kitops.org/docs/pykitops/)
