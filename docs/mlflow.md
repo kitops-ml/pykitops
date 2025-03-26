@@ -57,6 +57,9 @@ kitfile = kit.init(directory=artifact_location, name=name, description="my cool 
 # Update the Kitfile with parameters from the cur_run
 kitfile.model["parameters"] = cur_run.data.params
 
+# Configure ModelKitManager with the updated Kitfile
+manager.kitfile = kitfile
+
 # Pack the ModelKit using the Kitfile recipe, and push it to the registry
 manager.pack_and_push_modelkit(save_kitfile=True, with_login_and_logout=False)
 ```
