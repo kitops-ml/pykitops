@@ -63,5 +63,5 @@ jobs:
           branch: pykitops-docs-update
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor_id }}@users.noreply.github.com>
-          signoff: false
+          signoff: true
           delete-branch: true
