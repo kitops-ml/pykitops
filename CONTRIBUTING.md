@@ -24,8 +24,6 @@ We welcome many different types of contributions including:
 * [Bug fixes](https://github.com/kitops-ml/pykitops/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 * [Documentation](https://github.com/kitops-ml/pykitops/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation)
 * [Builds and CI/CD](https://github.com/kitops-ml/pykitops/issues?q=is%3Aopen+is%3Aissue+label%3Abuild)
-* Release management
-* Issue triage
 * Answering questions on Discord, or the mailing list
 * Communications, social media, blog posts, or other marketing
 
@@ -82,7 +80,7 @@ If you think there's something else you can help with please contact us in the [
 
 We use the project's GitHub issue tracker to report bugs or suggest features/enhancements.
 
-Before creating an issue, please check [existing open](https://github.com/kitops-ml/pykitops/issuess), or [recently closed](https://github.com/kitops-ml/pykitops/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aclosed%20), issues to make sure somebody else hasn't already 
+Before creating an issue, please check [existing open](https://github.com/kitops-ml/pykitops/issuess) or [recently closed](https://github.com/kitops-ml/pykitops/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aclosed%20) issues to make sure somebody else hasn't already 
 reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
 
 * A series of steps to reproduce
@@ -105,11 +103,11 @@ To send us a pull request, please:
 1. Fork the repository.
 2. Modify the source; please focus on the specific change you are contributing.
 3. Ensure local tests pass.
-4. Commit to your fork using clear commit messages.
+4. Commit to your fork using clear commit messages. Don't forget to [sign off on your commits](#sign-off-on-commits)!
 5. Send us a pull request, answering any default questions in the pull request interface.
 6. Pay attention to any automated CI failures reported in the pull request, and stay involved in the conversation.
 
-GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and 
+GitHub provides additional documents on [forking a repository](https://help.github.com/articles/fork-a-repo/) and 
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
 ## Sign off on Commits
