@@ -440,7 +440,7 @@ def _run(
         output = "% " + " ".join(command)
         if IS_A_TTY:
             output = f"{Color.CYAN.value}{output}{Color.RESET.value}"
-        LOG.info(output, flush=True)
+        LOG.info(output)
 
     # Because check=True is used, any non-zero exit status will raise a CalledProcessError.
     return subprocess.run(
