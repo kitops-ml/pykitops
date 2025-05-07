@@ -1,3 +1,6 @@
+---
+title: Before you begin with PyKitOps
+---
 ## Before You Begin
 
 This project was created using Python v3.12, but works with Python versions >= 3.10.
