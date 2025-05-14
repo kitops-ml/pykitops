@@ -10,8 +10,16 @@ jobs:
     name: Add issue to project
     runs-on: ubuntu-latest
     steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e   ## v2.0.6
+        with:
+          app-id: ${{ vars.KITOPS_BOT_ID }}
+          private-key: ${{ secrets.KITOPS_BOT_PRIVATE_KEY }}
+          owner: kitops-ml
+
       - name: Add To GitHub projects
-        uses: actions/add-to-project@v1.0.2
+        uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e  ## v1.0.2
         with:
           project-url: https://github.com/orgs/jozu-ai/projects/1
-          github-token: ${{ secrets.GITOPS_PAT}}
+          github-token: ${{ steps.generate-token.outputs.token }}
