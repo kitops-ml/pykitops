@@ -54,7 +54,7 @@ class Kitfile(PydanticKitfile):
             None
 
         Examples:
-            >>> from kitops.modelkit import Kitfile
+            >>> from kitops.modelkit.kitfile import Kitfile
             ...
             >>> kitfile = Kitfile(path="path/to/Kitfile")
             >>> kitfile.to_yaml()
