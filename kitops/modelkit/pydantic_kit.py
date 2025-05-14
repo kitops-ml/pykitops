@@ -168,5 +168,29 @@ class PydanticKitfile(BaseModel):
     docs: Optional[list[DocsEntry]] = []
     model: Optional[ModelSection] = None
 
+    def __setattr__(self, k, v) -> None:
+        nested_types: dict[str, type] = {
+            "package": Package,
+            "model": ModelSection,
+            "code": CodeEntry,
+            "datasets": DatasetEntry,
+            "docs": DocsEntry,
+        }
+        # Handle lists of nested models
+        list_types: dict[str, type] = {
+            "code": CodeEntry,
+            "datasets": DatasetEntry,
+            "docs": DocsEntry,
+        }
+        if k in nested_types and isinstance(v, dict):
+            super().__setattr__(k, nested_types[k](**v))
+        elif k in list_types and isinstance(v, list):
+            super().__setattr__(
+                k,
+                [list_types[k](**item) if isinstance(item, dict) else item for item in v],
+            )
+        else:
+            super().__setattr__(k, v)
+
 
 ALLOWED_KEYS = set(PydanticKitfile.model_fields)
