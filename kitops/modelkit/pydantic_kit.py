@@ -30,7 +30,7 @@ from .utils import WARN
 class BasePathModel(BaseModel):
     """Base class for validating paths."""
 
-    path: FilePath | DirectoryPath
+    path: FilePath | DirectoryPath | str
 
     @model_validator(mode="after")
     def validate_path(self) -> Self:
