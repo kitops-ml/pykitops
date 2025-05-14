@@ -107,10 +107,9 @@ class Kitfile(PydanticKitfile):
         config = {}
         if path:
             config: dict[str, Any] = {} | self.load(path=path) | kwargs
-        manifest_ver: Any | Literal["1.0.0"] = (
-            config.pop("manifestVersion", "") if "manifestVersion" in config else "1.0.0"
-        )
-        super().__init__(manifestVersion=manifest_ver, **config)
+        else:
+            config = {"manifestVersion": "1.0.0"} | kwargs
+        super().__init__(**config)
 
     def load(self, path: str) -> dict:
         """
