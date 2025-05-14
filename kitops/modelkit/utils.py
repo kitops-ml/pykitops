@@ -36,6 +36,7 @@ class Color(enum.Enum):
 
 
 IS_A_TTY = sys.stdout.isatty()
+WARN = f"{Color.YELLOW.value}Warning{Color.RESET.value}" if IS_A_TTY else "Warning"
 
 
 def validate_dict(value: Dict[str, Any], allowed_keys: Set[str]):
@@ -133,7 +134,7 @@ def parse_modelkit_tag(tag: str) -> Dict[str, str]:
         Dict[str, str]: Parsed components of the tag.
     """
     parts = tag.split("/")
-    if len(parts) != 3 or ":" not in parts[2]: # noqa: PLR2004
+    if len(parts) != 3 or ":" not in parts[2]:  # noqa: PLR2004
         raise ValueError(f"Invalid tag format: {tag}")
     return {
         "registry": parts[0],

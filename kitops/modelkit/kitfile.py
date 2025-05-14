@@ -25,7 +25,7 @@ from warnings import warn
 import yaml
 
 from .pydantic_kit import ALLOWED_KEYS, PydanticKitfile
-from .utils import IS_A_TTY, Color
+from .utils import IS_A_TTY, WARN, Color
 
 
 class Kitfile(PydanticKitfile):
@@ -134,7 +134,7 @@ class Kitfile(PydanticKitfile):
                 raise
 
         if any(ALLOWED_KEYS.difference(data.keys())):
-            raise ValueError("Kitfile must be a dictionary with allowed " + f"keys: {', '.join(ALLOWED_KEYS)}")
+            warn(f"{WARN} Kitfile missing expected keys: {ALLOWED_KEYS.difference(data.keys())}")
         # kitfile has been successfully loaded into data
         return data
 

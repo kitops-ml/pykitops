@@ -24,6 +24,8 @@ from typing import Any, Optional, Self
 
 from pydantic import BaseModel, DirectoryPath, Field, FilePath, model_validator
 
+from .utils import WARN
+
 
 class BasePathModel(BaseModel):
     """Base class for validating paths."""
@@ -34,9 +36,9 @@ class BasePathModel(BaseModel):
     def validate_path(self) -> Self:
         """Validate that the path exists."""
         if not Path(self.path).exists():
-            raise FileNotFoundError(f"Path '{self.path}' not found.")
+            warnings.warn(f"{WARN}: the provided path '{self.path}' not found.")
         if Path(self.path).is_absolute():
-            warnings.warn(message="Path must be relative to the current working directory.", category=UserWarning)
+            warnings.warn(message=f"{WARN}: Path must be relative to the current working directory.")
         return self
 
 
