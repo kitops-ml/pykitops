@@ -22,7 +22,7 @@ import warnings
 from pathlib import Path
 from typing import Any, Optional, Self
 
-from pydantic import BaseModel, DirectoryPath, Field, FilePath, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 from .utils import WARN
 
@@ -30,7 +30,7 @@ from .utils import WARN
 class BasePathModel(BaseModel):
     """Base class for validating paths."""
 
-    path: FilePath | DirectoryPath | str
+    path: str
 
     @model_validator(mode="after")
     def validate_path(self) -> Self:
