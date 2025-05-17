@@ -132,8 +132,6 @@ class Kitfile(PydanticKitfile):
             else:
                 raise
 
-        if any(ALLOWED_KEYS.difference(data.keys())):
-            warn(f"{WARN} Kitfile missing expected keys: {ALLOWED_KEYS.difference(data.keys())}")
         # kitfile has been successfully loaded into data
         return data
 
