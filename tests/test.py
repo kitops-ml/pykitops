@@ -1,6 +1,7 @@
 import os
 import shutil
 
+from kitops.modelkit import ModelSection
 from kitops.modelkit.manager import ModelKitManager
 
 
@@ -72,13 +73,32 @@ build_model()
 # update the Kitfile
 kitfile = manager.kitfile
 kitfile.model = {
-    "name": "titanic-survivability-predictor",
-    "path": "model/model.joblib",
-    "license": "Apache 2.0",
-    "framework": "scikit-learn",
-    "version": "1.0",
-    "description": "RandomForestClassifier",
-}
+        "name": "titanic-survivability-predictor",
+        "path": "model/model.joblib",
+        "license": "Apache 2.0",
+        "framework": "scikit-learn",
+        "version": "1.0",
+        "description": "RandomForestClassifier",
+    }
+manager.kitfile.print()
+
+kitfile.model = ModelSection.model_validate({
+        "name": "titanic-survivability-predictor",
+        "path": "model/model.joblib",
+        "license": "Apache 2.0",
+        "framework": "scikit-learn",
+        "version": "1.0",
+        "description": "RandomForestClassifier",
+    }
+)
+manager.kitfile.print()
+
+kitfile.package = {
+        "name": "titanic-survivability-predictor",
+        "version": "1.0",
+        "description": "RandomForestClassifier",
+        "authors": ["brett"],
+    }
 manager.kitfile.print()
 
 # update the ModelKit's tag to "latest"

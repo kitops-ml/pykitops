@@ -1,6 +1,7 @@
 # Usage
 import os
 
+from kitops.modelkit import Package
 from kitops.modelkit.kitfile import Kitfile
 
 
@@ -28,6 +29,14 @@ def test_everything(fixtures: dict[str, str]):
         "description": "New description",
         "authors": ["Author"],
     }
+    kitfile.package = Package.model_validate(
+        {
+            "name": "New-Package",
+            "version": "2.0.0",
+            "description": "New description",
+            "authors": ["Author"],
+        }
+    )
 
     print("kitfile.manifestVersion: " + kitfile.manifestVersion)
     print("kitfile.package: ")
@@ -48,6 +57,14 @@ def test_everything(fixtures: dict[str, str]):
     print("=======================================================")
 
     kitfile.manifestVersion = "3.0"
+    kitfile.package = Package.model_validate(
+        {
+            "name": "Another-Package",
+            "version": "3.0.0",
+            "description": "Another description",
+            "authors": ["Someone"],
+        }
+    )
     kitfile.package = {
         "name": "Another-Package",
         "version": "3.0.0",

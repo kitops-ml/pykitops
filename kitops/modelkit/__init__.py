@@ -15,3 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 """
+
+from ._pydantic_kit import CodeEntry, DatasetEntry, DocsEntry, ModelSection, Package
+
+__all__ = "Package", "CodeEntry", "DatasetEntry", "DocsEntry", "ModelSection"
