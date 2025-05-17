@@ -23,6 +23,12 @@ def test_everything(fixtures: dict[str, str]):
     print("=======================================================")
 
     kitfile.manifestVersion = "2.0"
+    kitfile.package = {
+        "name": "New-Package",
+        "version": "2.0.0",
+        "description": "New description",
+        "authors": ["Author"],
+    }
     kitfile.package = Package.model_validate(
         {
             "name": "New-Package",
@@ -59,6 +65,12 @@ def test_everything(fixtures: dict[str, str]):
             "authors": ["Someone"],
         }
     )
+    kitfile.package = {
+        "name": "Another-Package",
+        "version": "3.0.0",
+        "description": "Another description",
+        "authors": ["Someone"],
+    }
 
     print("=======================================================")
     # Serialize to YAML
