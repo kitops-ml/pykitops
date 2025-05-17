@@ -191,5 +191,3 @@ class PydanticKitfile(BaseModel):
             self.prop_package = Package.model_validate(value)
         else:
             raise TypeError(f"Expected dict or ModelSection, got {type(value)}")
-
-ALLOWED_KEYS = set(PydanticKitfile.model_fields)
