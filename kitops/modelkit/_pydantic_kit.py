@@ -64,7 +64,7 @@ class CodeEntry(BasePathModel):
     Single entry with information about the source code.
 
     Args:
-        path (FilePath): Location of the source code file or directory relative to the context.
+        path (str): Location of the source code file or directory relative to the context.
         description (Optional[str]): Description of what the code does.
         license (Optional[str]): SPDX license identifier for the code.
     """
@@ -79,7 +79,7 @@ class DatasetEntry(BasePathModel):
 
     Args:
         name (str): Name of the dataset.
-        path (FilePath): Location of the dataset file or directory relative to the context.
+        path (str): Location of the dataset file or directory relative to the context.
         description (str): Overview of the dataset.
         license (str): SPDX license identifier for the dataset.
     """
@@ -94,7 +94,7 @@ class DocsEntry(BasePathModel):
     Single entry with information about included documentation for the model.
 
     Args:
-        path (FilePath): Location of the documentation relative to the context.
+        path (str): Location of the documentation relative to the context.
         description (Optional[str]): Description of the documentation.
     """
 
@@ -106,7 +106,7 @@ class ModelPart(BasePathModel):
     One entry of the related files for the model, e.g. model weights.
 
     Args:
-        path (FilePath): Location of the file or a directory relative to the context.
+        path (str): Location of the file or a directory relative to the context.
         name (Optional[str]): Identifier for the part.
         type (Optional[str]): The type of the part (e.g. LoRA weights).
     """
@@ -120,7 +120,7 @@ class ModelSection(BasePathModel):
     Details of the trained models included in the package.
 
     Args:
-        path (FilePath): Location of the model file or directory relative to the context.
+        path (str): Location of the model file or directory relative to the context.
         name (Optional[str]): Name of the model.
         framework (Optional[str]): AI/ML framework.
         version (Optional[str]): Version of the model.
