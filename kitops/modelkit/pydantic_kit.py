@@ -162,11 +162,11 @@ class PydanticKitfile(BaseModel):
     """
 
     manifestVersion: str = Field(default=..., examples=["1.0.0", "0.13a"], coerce_numbers_to_str=True)
-    package: Optional[Package] = Package()
-    code: Optional[list[CodeEntry]] = []
-    datasets: Optional[list[DatasetEntry]] = []
-    docs: Optional[list[DocsEntry]] = []
-    model: Optional[ModelSection] = None
+    package: Optional[Package | dict] = Package()
+    code: Optional[list[CodeEntry | dict]] = []
+    datasets: Optional[list[DatasetEntry | dict]] = []
+    docs: Optional[list[DocsEntry | dict]] = []
+    model: Optional[ModelSection | dict] = None
 
     def __setattr__(self, k, v) -> None:
         nested_types: dict[str, type] = {
