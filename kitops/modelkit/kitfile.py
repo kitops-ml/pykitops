@@ -19,13 +19,13 @@ Define the Kitfile class to manage KitOps ModelKits and Kitfiles.
 """
 
 from pathlib import Path
-from typing import Any, Literal, Optional
+from typing import Any, Optional
 from warnings import warn
 
 import yaml
 
-from .pydantic_kit import ALLOWED_KEYS, PydanticKitfile
-from .utils import IS_A_TTY, WARN, Color
+from ._pydantic_kit import PydanticKitfile
+from .utils import IS_A_TTY, Color
 
 
 class Kitfile(PydanticKitfile):

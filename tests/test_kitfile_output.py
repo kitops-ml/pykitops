@@ -1,8 +1,8 @@
 # Usage
 import os
 
+from kitops.modelkit import Package
 from kitops.modelkit.kitfile import Kitfile
-from kitops.modelkit.pydantic_kit import Package
 
 
 def test_everything(fixtures: dict[str, str]):

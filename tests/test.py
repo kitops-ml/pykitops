@@ -1,8 +1,8 @@
 import os
 import shutil
 
+from kitops.modelkit import ModelSection
 from kitops.modelkit.manager import ModelKitManager
-from kitops.modelkit.pydantic_kit import ModelSection
 
 
 def clean_temp_dir():
