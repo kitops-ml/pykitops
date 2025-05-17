@@ -93,6 +93,14 @@ kitfile.model = ModelSection.model_validate({
 )
 manager.kitfile.print()
 
+kitfile.package = {
+        "name": "titanic-survivability-predictor",
+        "version": "1.0",
+        "description": "RandomForestClassifier",
+        "authors": ["brett"],
+    }
+manager.kitfile.print()
+
 # update the ModelKit's tag to "latest"
 manager.modelkit_reference.tag = "latest"
 # pack and push the ModelKit to Jozu.ml

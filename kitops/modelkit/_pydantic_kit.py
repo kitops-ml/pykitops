@@ -22,7 +22,7 @@ import warnings
 from pathlib import Path
 from typing import Any, Optional, Self
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, computed_field, model_validator
 
 from .utils import WARN
 
@@ -154,43 +154,42 @@ class PydanticKitfile(BaseModel):
 
     Args:
         manifestVersion (str): Specifies the manifest format version.
-        package (Package): This section provides general information about the AI/ML project.
+        package (Optional[Package | dict]): This section provides general information about the AI/ML project.
         code (Optional[list[CodeEntry]]): Information about the source code.
         datasets (Optional[list[DatasetEntry]]): Information about the datasets used.
         docs (Optional[list[DocsEntry]]): Information about included documentation for the model.
-        model (Optional[ModelSection]): Details of the trained models included in the package.
+        model (Optional[ModelSection | dict]): Details of the trained models included in the package.
     """
 
     manifestVersion: str = Field(default=..., examples=["1.0.0", "0.13a"], coerce_numbers_to_str=True)
-    package: Optional[Package | dict] = Package()
-    code: Optional[list[CodeEntry | dict]] = []
-    datasets: Optional[list[DatasetEntry | dict]] = []
-    docs: Optional[list[DocsEntry | dict]] = []
-    model: Optional[ModelSection | dict] = None
+    code: Optional[list[CodeEntry]] = []
+    datasets: Optional[list[DatasetEntry]] = []
+    docs: Optional[list[DocsEntry]] = []
+    prop_package: Package = Field(default_factory=Package, alias="package", repr=False)
+    prop_model: ModelSection = Field(default_factory=lambda: ModelSection(path=""), alias="model", repr=False)
 
-    def __setattr__(self, k, v) -> None:
-        nested_types: dict[str, type] = {
-            "package": Package,
-            "model": ModelSection,
-            "code": CodeEntry,
-            "datasets": DatasetEntry,
-            "docs": DocsEntry,
-        }
-        # Handle lists of nested models
-        list_types: dict[str, type] = {
-            "code": CodeEntry,
-            "datasets": DatasetEntry,
-            "docs": DocsEntry,
-        }
-        if k in nested_types and isinstance(v, dict):
-            super().__setattr__(k, nested_types[k](**v))
-        elif k in list_types and isinstance(v, list):
-            super().__setattr__(
-                k,
-                [list_types[k](**item) if isinstance(item, dict) else item for item in v],
-            )
+    @computed_field(repr=True)
+    @property
+    def model(self) -> ModelSection:
+        return self.prop_model
+    
+    @model.setter
+    def model(self, value: ModelSection | dict) -> None:
+        if isinstance(value, (dict, ModelSection)):
+            self.prop_model = ModelSection.model_validate(value)
         else:
-            super().__setattr__(k, v)
+            raise TypeError(f"Expected dict or ModelSection, got {type(value)}")
 
+    @computed_field(repr=True)
+    @property
+    def package(self) -> Package:
+        return self.prop_package
+    
+    @package.setter
+    def package(self, value: Package | dict) -> None:
+        if isinstance(value, (dict, Package)):
+            self.prop_package = Package.model_validate(value)
+        else:
+            raise TypeError(f"Expected dict or ModelSection, got {type(value)}")
 
 ALLOWED_KEYS = set(PydanticKitfile.model_fields)
