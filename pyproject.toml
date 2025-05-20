@@ -39,6 +39,7 @@ types-pyyaml = "^6.0.12.20250402"
 line-length = 120
 
 [tool.ruff.lint]
+ignore = ["PLR2004"]
 select = [
     # pycodestyle
     "E",

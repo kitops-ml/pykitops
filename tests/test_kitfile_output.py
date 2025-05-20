@@ -10,7 +10,8 @@ def test_initialize_from_path(fixtures: dict[str, str]):
 
     # assert package block
     assert kitfile.package.get("name") == "Titanic-Survivability-Predictor"
-    assert kitfile.package.get("description") == "A model attempting to predict passenger survivability of  the Titanic Shipwreck"
+    assert kitfile.package.get("description") == \
+        "A model attempting to predict passenger survivability of  the Titanic Shipwreck"
     assert kitfile.package.get("authors") == ["Jozu"]
 
     # assert code block
@@ -19,7 +20,8 @@ def test_initialize_from_path(fixtures: dict[str, str]):
     assert kitfile.code[0].get("description") == "Python packages required by this example."
     assert kitfile.code[0].get("license") == "Apache-2.0"
     assert kitfile.code[1].get("path") == "titanic_survivability.ipynb"
-    assert kitfile.code[1].get("description") == "Jupyter Notebook used to train, validate, optimize and  export the model."
+    assert kitfile.code[1].get("description") == \
+        "Jupyter Notebook used to train, validate, optimize and  export the model."
     assert kitfile.code[1].get("license") == "Apache-2.0"
 
     # assert datasets block
