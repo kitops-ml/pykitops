@@ -1,6 +1,7 @@
 import os
 import shutil
 
+from kitops.modelkit import ModelSection
 from kitops.modelkit.manager import ModelKitManager
 
 
@@ -61,9 +62,7 @@ setup()
 
 # get a fresh copy of the "titanic-survivability:processed-data-v5" ModelKit
 modelkit_tag = "jozu.ml/brett/titanic-survivability:processed-data-v5"
-manager = ModelKitManager(
-    working_directory="temp/titanic-partial", modelkit_tag=modelkit_tag
-)
+manager = ModelKitManager(working_directory="temp/titanic-partial", modelkit_tag=modelkit_tag)
 manager.pull_and_unpack_modelkit(load_kitfile=True)
 manager.kitfile.print()
 
@@ -78,6 +77,26 @@ kitfile.model = {
     "framework": "scikit-learn",
     "version": "1.0",
     "description": "RandomForestClassifier",
+}
+manager.kitfile.print()
+
+kitfile.model = ModelSection.model_validate(
+    {
+        "name": "titanic-survivability-predictor",
+        "path": "model/model.joblib",
+        "license": "Apache 2.0",
+        "framework": "scikit-learn",
+        "version": "1.0",
+        "description": "RandomForestClassifier",
+    }
+)
+manager.kitfile.print()
+
+kitfile.package = {
+    "name": "titanic-survivability-predictor",
+    "version": "1.0",
+    "description": "RandomForestClassifier",
+    "authors": ["brett"],
 }
 manager.kitfile.print()
 

@@ -133,7 +133,7 @@ def parse_modelkit_tag(tag: str) -> Dict[str, str]:
         Dict[str, str]: Parsed components of the tag.
     """
     parts = tag.split("/")
-    if len(parts) != 3 or ":" not in parts[2]: # noqa: PLR2004
+    if len(parts) != 3 or ":" not in parts[2]:  # noqa: PLR2004
         raise ValueError(f"Invalid tag format: {tag}")
     return {
         "registry": parts[0],
