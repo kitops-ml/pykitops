@@ -189,14 +189,17 @@ class ModelKitManager:
             registry=self.modelkit_reference.registry,
         )
 
-    def inspect_modelkit(self) -> Dict[str, Any]:
+    def inspect_modelkit(self, remote: Optional[bool] = False) -> Dict[str, Any]:
         """
         Inspects the ModelKit and returns the inspection results as a dictionary.
+
+        Parameters:
+        remote (Optional[bool]): Flag to indicate if the inspection should be done remotely. Defaults to False.
 
         Returns:
             Dict[str, Any]: The inspection results.
         """
-        return kit.inspect(self.modelkit_reference.modelkit_tag)
+        return kit.inspect(self.modelkit_reference.modelkit_tag, remote)
 
     def pull_and_unpack_modelkit(
         self,
