@@ -143,7 +143,7 @@ def init(
 
 
 def inspect(
-    repo_path_with_tag: str, remote: Optional[bool] = True, **kwargs
+    repo_path_with_tag: str, remote: Optional[bool] = False, **kwargs
 ) -> Dict[str, Any]:
     """
     Inspect a ModelKit, displaying the contents in the console, while returning
@@ -151,8 +151,7 @@ def inspect(
 
     Parameters:
     repo_path_with_tag (str): The path to the repository along with the tag.
-    remote (Optional[bool]): Flag to indicate if the inspection should be done remotely. Defaults to True.
-        Otherwise, the inspection will be done locally.
+    remote (Optional[bool]): Flag to indicate if the inspection should be done remotely. Defaults to False.
     **kwargs: Additional arguments to pass to the command.
 
     Returns:
@@ -163,6 +162,8 @@ def inspect(
         The exception contains the return code and the standard error output.
     """
     command = ["kit", "inspect", repo_path_with_tag]
+    if remote:
+        command.append("--remote")
 
     command.extend(_process_command_flags(kit_cmd_name="inspect", **kwargs))
     result = _run(command=command)
