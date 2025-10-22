@@ -61,7 +61,7 @@ def import_from_hf(repo_path_without_tag: str, **kwargs) -> None:
 
 
 def info(
-    repo_path_with_tag: str, filters: Optional[List[str]] = None, **kwargs
+    repo_path_with_tag: str, filters: Optional[List[str]] = None, remote: Optional[bool] = False, **kwargs
 ) -> Dict[str, Any]:
     """
     Retrieve information about a ModelKit, displaying the contents in the console,
@@ -315,7 +315,7 @@ def push(repo_path_with_tag: str, **kwargs) -> None:
     LOG.info(result.stdout)
 
 
-def remove(repo_path_with_tag: str, **kwargs) -> None:
+def remove(repo_path_with_tag: str, remote: Optional[bool] = False, **kwargs) -> None:
     """
     Remove a ModelKit from the registry.
 
