@@ -61,7 +61,7 @@ def import_from_hf(repo_path_without_tag: str, **kwargs) -> None:
 
 
 def info(
-    repo_path_with_tag: str, filters: Optional[List[str]] = None, **kwargs
+    repo_path_with_tag: str, filters: Optional[List[str]] = None, remote: Optional[bool] = False, **kwargs
 ) -> Dict[str, Any]:
     """
     Retrieve information about a ModelKit, displaying the contents in the console,
@@ -91,6 +91,8 @@ def info(
         for filter in filters:
             command.append("--filter")
             command.append(filter)
+    if remote:
+        command.append("--remote")
 
     command.extend(_process_command_flags(kit_cmd_name="info", **kwargs))
     result = _run(command=command)
@@ -313,7 +315,7 @@ def push(repo_path_with_tag: str, **kwargs) -> None:
     LOG.info(result.stdout)
 
 
-def remove(repo_path_with_tag: str, **kwargs) -> None:
+def remove(repo_path_with_tag: str, remote: Optional[bool] = False, **kwargs) -> None:
     """
     Remove a ModelKit from the registry.
 
@@ -329,6 +331,8 @@ def remove(repo_path_with_tag: str, **kwargs) -> None:
         The exception contains the return code and the standard error output.
     """
     command = ["kit", "remove", repo_path_with_tag]
+    if remote:
+        command.append("--remote")
 
     command.extend(_process_command_flags(kit_cmd_name="remove", **kwargs))
     result = _run(command=command)
