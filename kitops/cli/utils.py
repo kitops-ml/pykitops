@@ -335,13 +335,10 @@ def _process_command_flags(kit_cmd_name: str, **kwargs) -> List[str]:
     """
     flags = []
     if kit_cmd_name in [
-        "info",
-        "inspect",
         "list",
         "login",
         "pull",
         "push",
-        "remove",
         "unpack",
     ]:
         flags.extend(_get_plain_http_flag(**kwargs))

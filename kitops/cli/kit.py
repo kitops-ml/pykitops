@@ -91,6 +91,8 @@ def info(
         for filter in filters:
             command.append("--filter")
             command.append(filter)
+    if remote:
+        command.append("--remote")
 
     command.extend(_process_command_flags(kit_cmd_name="info", **kwargs))
     result = _run(command=command)
@@ -329,6 +331,8 @@ def remove(repo_path_with_tag: str, **kwargs) -> None:
         The exception contains the return code and the standard error output.
     """
     command = ["kit", "remove", repo_path_with_tag]
+    if remote:
+        command.append("--remote")
 
     command.extend(_process_command_flags(kit_cmd_name="remove", **kwargs))
     result = _run(command=command)
