@@ -4,9 +4,9 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "kitops"
-version = "1.3.0"
+version = "1.4.0"
 authors = [
-  { name="Brett Hodges", email="brett@jozu.com" },
+  { name="Jacob Fuss", email="jacob@jozu.com" },
 ]
 description = "A package for managing KitOps ModelKits and Kitfiles"
 readme = {file = "README.md", content-type = "text/markdown"}
