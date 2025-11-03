@@ -27,13 +27,13 @@ Repository = "https://github.com/jozu-ai/pykitops"
 Documentation = "https://kitops.org/docs/pykitops/reference/"
 
 [tool.poetry.dependencies]
-python-dotenv = "^1.1"
+python-dotenv = "^1.2"
 pyyaml = "^6.0"
-pydantic = "^2.11"
+pydantic = "^2.12"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"
-ruff = "^0.12.12"
+ruff = "^0.14.3"
 types-pyyaml = "^6.0.12.20250822"
 
 [tool.ruff]
