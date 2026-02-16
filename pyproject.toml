@@ -33,7 +33,7 @@ pydantic = "^2.12"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.2"
-ruff = "^0.15.0"
+ruff = "^0.15.1"
 types-pyyaml = "^6.0.12.20250915"
 
 [tool.ruff]
