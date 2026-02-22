@@ -37,6 +37,7 @@ class Kitfile(PydanticKitfile):
         code (Optional[list[CodeEntry | dict]]): Information about the source code. Defaults to empty list.
         datasets (Optional[list[DatasetEntry | dict]): Information for the datasets. Defaults to empty list.
         docs (Optional[list[DocsEntry | dict]): Included documentation for the model. Defaults to empty list.
+        prompts (Optional[list[PromptEntry | dict]]): Information for the prompts. Defaults to empty list.
         model (Optional[ModelSection | dict | None]): Details of the models included. Defaults to None.
     """
 
@@ -69,6 +70,7 @@ class Kitfile(PydanticKitfile):
             ...                      "description": "Dataset description",
             ...                      "license": "Apache-2.0"}]
             >>> kitfile.docs = [{"path": "docs/", "description": "Docs description"}]
+            >>> kitfile.prompts = [{"path": "prompts/", "description": "Prompts description"}]
             >>> kitfile.model = {"name": "my_model", "path": "model/",
             ...                  "framework": "tensorflow", "version": "2.0.0",
             ...                  "description": "Model description",
@@ -95,6 +97,9 @@ class Kitfile(PydanticKitfile):
              docs:
              - path: docs/
                description: Docs description
+             prompts:
+             - path: prompts/
+               description: Prompts description
              model:
                  name: my_model
                  path: model/
