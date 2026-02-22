@@ -31,6 +31,9 @@ docs:
 - path: images
   description: >-
     Directory containing figures and graphs exported as image files.
+prompts:
+- path: prompts/
+  description: System and user prompts for validation
 model:
   name: titanic-survivability-predictor
   path: model
