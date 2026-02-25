@@ -37,7 +37,12 @@ def test_initialize_from_path(fixtures: dict[str, str]):
     assert kitfile.docs[1].path == "images"
     assert kitfile.docs[1].description == (
         "Directory containing figures and graphs exported as image files."
-    )  # assert model block
+    )
+    # assert prompts block
+    assert len(kitfile.prompts) == 1
+    assert kitfile.prompts[0].path == "prompts/"
+    assert kitfile.prompts[0].description == "System and user prompts for validation"
+    # assert model block
     assert kitfile.model.name == "titanic-survivability-predictor"
     assert kitfile.model.path == "model"
     assert kitfile.model.description == "Directory containing figures and graphs exported as image files."
@@ -71,6 +76,7 @@ def test_pydantic_init_from_path_vs_dict(fixtures: dict[str, str]):
     assert kitfile.code == kitfile_from_dict.code
     assert kitfile.datasets == kitfile_from_dict.datasets
     assert kitfile.docs == kitfile_from_dict.docs
+    assert kitfile.prompts == kitfile_from_dict.prompts
     assert kitfile.model == kitfile_from_dict.model
     assert kitfile.model.parts == kitfile_from_dict.model.parts
     assert kitfile.model.parameters == kitfile_from_dict.model.parameters

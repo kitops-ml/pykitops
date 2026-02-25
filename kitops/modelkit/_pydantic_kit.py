@@ -89,6 +89,18 @@ class DocsEntry(BasePathModel):
     description: Optional[str] = ""
 
 
+class PromptEntry(BasePathModel):
+    """
+    Single entry with information about the system or user prompts.
+
+    Args:
+        path (str): Location of the prompt file or directory relative to the context.
+        description (Optional[str]): Description of the prompt.
+    """
+
+    description: Optional[str] = ""
+
+
 class ModelPart(BasePathModel):
     """
     One entry of the related files for the model, e.g. model weights.
@@ -160,6 +172,7 @@ class PydanticKitfile(BaseModel):
     prop_code: list[CodeEntry] = Field(default_factory=list, alias="code", repr=False, exclude=True)
     prop_datasets: list[DatasetEntry] = Field(default_factory=list, alias="datasets", repr=False, exclude=True)
     prop_docs: list[DocsEntry] = Field(default_factory=list, alias="docs", repr=False, exclude=True)
+    prop_prompts: list[PromptEntry] = Field(default_factory=list, alias="prompts", repr=False, exclude=True)
     prop_package: Package = Field(default_factory=Package, alias="package", repr=False, exclude=True)
     prop_model: ModelSection = Field(
         default_factory=lambda: ModelSection(path=""), alias="model", repr=False, exclude=True
@@ -231,6 +244,19 @@ class PydanticKitfile(BaseModel):
             self.prop_docs = [DocsEntry.model_validate(item) if isinstance(item, dict) else item for item in value]
         else:
             raise TypeError(f"Expected list of DocsEntry or dict, got {type(value)}")
+
+    @computed_field(repr=True)
+    @property
+    def prompts(self) -> list[PromptEntry]:
+        """Information about the prompts used."""
+        return self.prop_prompts
+
+    @prompts.setter
+    def prompts(self, value: list[PromptEntry] | list[dict]) -> None:
+        if isinstance(value, list):
+            self.prop_prompts = [PromptEntry.model_validate(item) if isinstance(item, dict) else item for item in value]
+        else:
+            raise TypeError(f"Expected list of PromptEntry or dict, got {type(value)}")
 
     @computed_field(repr=True)
     @property
