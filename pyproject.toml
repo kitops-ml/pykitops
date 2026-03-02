@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "kitops"
-version = "1.4.0"
+version = "1.5.0"
 authors = [
   { name="Jacob Fuss", email="jacob@jozu.com" },
 ]
