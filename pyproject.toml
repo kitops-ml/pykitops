@@ -34,7 +34,7 @@ pydantic = "^2.13"
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.1.0"
 ruff = "^0.15.17"
-types-pyyaml = "^6.0.12.20260510"
+types-pyyaml = "^6.0.12.20260518"
 
 [tool.ruff]
 line-length = 120
